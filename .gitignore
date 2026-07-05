@@ -4,6 +4,8 @@
 .git-upload/
 __pycache__/
 *.pyc
+.oj_session.json
+oj_client.py
 cookies.txt
 .DS_Store
 Thumbs.db

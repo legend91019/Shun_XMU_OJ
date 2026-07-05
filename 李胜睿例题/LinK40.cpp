@@ -1,6 +1,5 @@
 /*
  * LinK40: 骑士林克的怜悯(1)
- * 纯DFS字典序搜索
  */
 
 #include <cstdio>
@@ -21,11 +20,22 @@ bool dfs(int r, int c, int step) {
 
     for (int d = 0; d < 8; d++) {
         int nr = r + dr[d], nc = c + dc[d];
-        if (nr >= 0 && nr < p && nc >= 0 && nc < q && !vis[nr][nc])
+        if (nr >= 0 && nr < p && nc >= 0 && nc < q && !vis[nr][nc]) {
             if (dfs(nr, nc, step + 1)) return true;
+        }
     }
 
     vis[r][c] = false;
+    return false;
+}
+
+bool solve() {
+    for (int c = 0; c < q; c++) {
+        for (int r = 0; r < p; r++) {
+            memset(vis, 0, sizeof(vis));
+            if (dfs(r, c, 1)) return true;
+        }
+    }
     return false;
 }
 
@@ -35,17 +45,16 @@ int main() {
     for (int t = 1; t <= T; t++) {
         scanf("%d%d", &p, &q);
         total = p * q;
-        memset(vis, 0, sizeof(vis));
+
         printf("#%d:\n", t);
-        if (total >= 1) {
-            if (dfs(0, 0, 1)) {
-                for (int i = 1; i <= total; i++)
-                    printf("%c%d", 'A' + path_c[i], path_r[i] + 1);
-                printf("\n");
-                continue;
+        if (solve()) {
+            for (int i = 1; i <= total; i++) {
+                printf("%c%d", 'A' + path_c[i], path_r[i] + 1);
             }
+            printf("\n");
+        } else {
+            printf("none\n");
         }
-        printf("none\n");
     }
     return 0;
 }
