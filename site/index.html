@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>XMUOJ 题解站 | 天帝——王勇顺</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#/">
+        <span class="brand-mark">W</span>
+        <span>
+          <strong>王勇顺的 XMUOJ 题解站</strong>
+          <small>天帝——王勇顺</small>
+        </span>
+      </a>
+      <nav class="top-actions" aria-label="页面导航">
+        <a href="#/bank/jiandao">剑道试炼</a>
+        <a href="#/bank/examples">例题</a>
+        <button id="themeToggle" class="icon-button" type="button" title="切换明暗主题" aria-label="切换明暗主题">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="题目目录">
+        <div class="search-shell">
+          <label for="searchInput">搜索题目或代码</label>
+          <input id="searchInput" type="search" placeholder="JD099 / A+B / stack" autocomplete="off" />
+        </div>
+        <div class="bank-switch" id="bankSwitch"></div>
+        <div class="sidebar-meta" id="sidebarMeta"></div>
+        <nav class="problem-list" id="problemList" aria-label="题目列表"></nav>
+      </aside>
+
+      <section class="content" id="app" aria-live="polite"></section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+.agents/
+.claude/
+.codex/
+.git-upload/
+__pycache__/
+*.pyc
+cookies.txt
+.DS_Store
+Thumbs.db

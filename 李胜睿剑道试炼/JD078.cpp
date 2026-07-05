@@ -1,0 +1,13 @@
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string a, b;
+    int k;
+    getline(cin, a);
+    getline(cin, a);
+    getline(cin, b);
+    if (a.find(b) != string::npos) cout << "yes" << endl;
+    else cout << "no" << endl;
+    return 0;
+}
