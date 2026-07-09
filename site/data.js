@@ -1003,8 +1003,8 @@ window.XMUOJ_SITE_DATA = {
           "file": "JD053.cpp",
           "title": "完璧归宗",
           "language": "C++",
-          "lineCount": 9,
-          "source": "#include <cstdio>\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int p[] = {6, 28, 496, 8128};\n    for (int i = 0; i < 4; i++)\n        if (p[i] <= n) printf(\"%d\\n\", p[i]);\n    return 0;\n}\n",
+          "lineCount": 26,
+          "source": "/*\n * JD053: 完璧归宗\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    unsigned long long n;\n    cin >> n;\n    unsigned long long perfect[] = {\n        6ULL,\n        28ULL,\n        496ULL,\n        8128ULL,\n        33550336ULL,\n        8589869056ULL,\n        137438691328ULL,\n        2305843008139952128ULL\n    };\n\n    for (unsigned long long x : perfect) {\n        if (x <= n) cout << x << '\\n';\n    }\n    return 0;\n}\n",
           "meta": {
             "ojId": "6981",
             "source": "JD | JD053 | 第4章 排兵布阵",
@@ -1949,6 +1949,630 @@ window.XMUOJ_SITE_DATA = {
             "sampleInput": "1 3 5 -1\n2 4 6 -1",
             "sampleOutput": "1 2 3 4 5 6"
           }
+        },
+        {
+          "id": "jiandao-JD102",
+          "code": "JD102",
+          "file": "JD102.cpp",
+          "title": "三元归序",
+          "language": "C++",
+          "lineCount": 39,
+          "source": "/*\n * JD102: 三元归序\n */\n\n#include <iostream>\n#include <algorithm>\n#include <iomanip>\n#include <string>\nusing namespace std;\n\nstruct Record {\n    int x;\n    double y;\n    string z;\n};\n\nbool cmp(const Record& a, const Record& b) {\n    if (a.x != b.x) return a.x < b.x;       // 先按编号升序\n    return a.y < b.y;                       // 编号相同按重量升序\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    Record rec[1000];\n    for (int i = 0; i < N; i++) {\n        cin >> rec[i].x >> rec[i].y >> rec[i].z;\n    }\n    \n    sort(rec, rec + N, cmp);\n    \n    cout << fixed << setprecision(2);\n    for (int i = 0; i < N; i++) {\n        cout << rec[i].x << \" \" << rec[i].y << \" \" << rec[i].z << endl;\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD103",
+          "code": "JD103",
+          "file": "JD103.cpp",
+          "title": "立桩定阵",
+          "language": "C++",
+          "lineCount": 50,
+          "source": "/*\n * JD103: 立桩定阵\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010];\n\nvoid quickSort(int l, int r) {\n    if (l >= r) return;\n    \n    // 选中间元素作为基准\n    int pivot = a[(l + r) / 2];\n    int i = l, j = r;\n    \n    // 双指针分区\n    while (i <= j) {\n        while (a[i] < pivot) i++;\n        while (a[j] > pivot) j--;\n        if (i <= j) {\n            swap(a[i], a[j]);\n            i++;\n            j--;\n        }\n    }\n    \n    // 递归处理左右两部分\n    if (l < j) quickSort(l, j);\n    if (i < r) quickSort(i, r);\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    \n    quickSort(0, n - 1);\n    \n    for (int i = 0; i < n; i++) {\n        if (i > 0) cout << \" \";\n        cout << a[i];\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD104",
+          "code": "JD104",
+          "file": "JD104.cpp",
+          "title": "照妖辨品",
+          "language": "C++",
+          "lineCount": 22,
+          "source": "/*\n * JD104: 照妖辨品\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, k;\n    cin >> n >> k;\n    vector<long long> a(n);\n    for (long long &x : a) cin >> x;\n    int idx = (k == 0 ? 0 : k - 1);\n    if (idx < 0) idx = 0;\n    if (idx >= n) idx = n - 1;\n    nth_element(a.begin(), a.begin() + idx, a.end());\n    cout << a[idx] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD105",
+          "code": "JD105",
+          "file": "JD105.cpp",
+          "title": "双剑合阵",
+          "language": "C++",
+          "lineCount": 56,
+          "source": "/*\n * JD105: 双剑合阵\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], tmp[100010];\n\nvoid mergeSort(int l, int r) {\n    if (l >= r) return;\n    \n    int mid = (l + r) / 2;\n    \n    // 递归拆分\n    mergeSort(l, mid);\n    mergeSort(mid + 1, r);\n    \n    // 合并两个有序数组\n    int i = l, j = mid + 1, k = 0;\n    \n    while (i <= mid && j <= r) {\n        if (a[i] <= a[j]) {\n            tmp[k++] = a[i++];\n        } else {\n            tmp[k++] = a[j++];\n        }\n    }\n    \n    while (i <= mid) tmp[k++] = a[i++];\n    while (j <= r) tmp[k++] = a[j++];\n    \n    // 将临时数组复制回原数组\n    for (i = l, k = 0; i <= r; i++, k++) {\n        a[i] = tmp[k];\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    \n    mergeSort(0, n - 1);\n    \n    for (int i = 0; i < n; i++) {\n        if (i > 0) cout << \" \";\n        cout << a[i];\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD106",
+          "code": "JD106",
+          "file": "JD106.cpp",
+          "title": "逆流之数",
+          "language": "C++",
+          "lineCount": 55,
+          "source": "/*\n * JD106: 逆流之数\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], tmp[100010];\nlong long ans = 0;\n\nvoid mergeSort(int l, int r) {\n    if (l >= r) return;\n    \n    int mid = (l + r) / 2;\n    \n    // 递归拆分\n    mergeSort(l, mid);\n    mergeSort(mid + 1, r);\n    \n    // 合并两个有序数组，同时统计逆序对\n    int i = l, j = mid + 1, k = 0;\n    \n    while (i <= mid && j <= r) {\n        if (a[i] <= a[j]) {\n            tmp[k++] = a[i++];\n        } else {\n            // 右边元素先出列，左边剩余元素都与它构成逆序对\n            ans += mid - i + 1;\n            tmp[k++] = a[j++];\n        }\n    }\n    \n    while (i <= mid) tmp[k++] = a[i++];\n    while (j <= r) tmp[k++] = a[j++];\n    \n    // 将临时数组复制回原数组\n    for (i = l, k = 0; i <= r; i++, k++) {\n        a[i] = tmp[k];\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    \n    mergeSort(0, n - 1);\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD107",
+          "code": "JD107",
+          "file": "JD107.cpp",
+          "title": "石壁听风",
+          "language": "C++",
+          "lineCount": 60,
+          "source": "/*\n * JD107: 石壁听风\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010];\n\n// 找第一个 >= x 的位置（左边界）\nint lowerBound(int l, int r, int x) {\n    while (l < r) {\n        int mid = (l + r) / 2;\n        if (a[mid] >= x) {\n            r = mid;\n        } else {\n            l = mid + 1;\n        }\n    }\n    if (a[l] == x) return l;\n    return -1;\n}\n\n// 找最后一个 <= x 的位置（右边界）\nint upperBound(int l, int r, int x) {\n    while (l < r) {\n        int mid = (l + r + 1) / 2;\n        if (a[mid] <= x) {\n            l = mid;\n        } else {\n            r = mid - 1;\n        }\n    }\n    if (a[l] == x) return l;\n    return -1;\n}\n\nint main() {\n    int n, q;\n    cin >> n >> q;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    \n    while (q--) {\n        int x;\n        cin >> x;\n        \n        int left = lowerBound(0, n - 1, x);\n        if (left == -1) {\n            cout << \"-1 -1\" << endl;\n        } else {\n            int right = upperBound(0, n - 1, x);\n            cout << left << \" \" << right << endl;\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD108",
+          "code": "JD108",
+          "file": "JD108.cpp",
+          "title": "剑指方根",
+          "language": "C++",
+          "lineCount": 30,
+          "source": "/*\n * JD108: 剑指方根\n */\n\n#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    double n;\n    cin >> n;\n    \n    double l = -10000, r = 10000;\n    \n    // 浮点二分，精度要求1e-8\n    while (r - l > 1e-8) {\n        double mid = (l + r) / 2;\n        double cube = mid * mid * mid;\n        \n        if (cube >= n) {\n            r = mid;\n        } else {\n            l = mid;\n        }\n    }\n    \n    cout << fixed << setprecision(6) << l << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD109",
+          "code": "JD109",
+          "file": "JD109.cpp",
+          "title": "铁壁识痕",
+          "language": "C++",
+          "lineCount": 31,
+          "source": "/*\n * JD109: 铁壁识痕\n */\n\n#include <iostream>\nusing namespace std;\n\n// 统计二进制中1的个数（使用n & (n-1)消去最低位1）\nint countOnes(int n) {\n    int cnt = 0;\n    while (n) {\n        n &= n - 1;  // 消去最低位的1\n        cnt++;\n    }\n    return cnt;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        if (i > 0) cout << \" \";\n        cout << countOnes(x);\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD110",
+          "code": "JD110",
+          "file": "JD110.cpp",
+          "title": "万钧合一",
+          "language": "C++",
+          "lineCount": 47,
+          "source": "/*\n * JD110: 万钧合一\n */\n\n#include <iostream>\n#include <cstring>\nusing namespace std;\n\nint a[100010], b[100010], c[100010];\n\nint main() {\n    string s1, s2;\n    cin >> s1 >> s2;\n    \n    // 将字符串逆序存入数组\n    int len1 = s1.length(), len2 = s2.length();\n    for (int i = 0; i < len1; i++) {\n        a[i] = s1[len1 - 1 - i] - '0';\n    }\n    for (int i = 0; i < len2; i++) {\n        b[i] = s2[len2 - 1 - i] - '0';\n    }\n    \n    // 逐位相加\n    int len = max(len1, len2);\n    int carry = 0;\n    \n    for (int i = 0; i < len; i++) {\n        int sum = a[i] + b[i] + carry;\n        c[i] = sum % 10;\n        carry = sum / 10;\n    }\n    \n    // 处理最高位的进位\n    if (carry > 0) {\n        c[len] = carry;\n        len++;\n    }\n    \n    // 倒序输出\n    for (int i = len - 1; i >= 0; i--) {\n        cout << c[i];\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD111",
+          "code": "JD111",
+          "file": "JD111.cpp",
+          "title": "削铁如泥",
+          "language": "C++",
+          "lineCount": 62,
+          "source": "/*\n * JD111: 削铁如泥\n */\n\n#include <iostream>\n#include <cstring>\nusing namespace std;\n\nint a[100010], b[100010], c[100010];\n\n// 比较两个字符串表示的数字大小，返回 true 表示 a >= b\nbool compare(string &s1, string &s2) {\n    if (s1.length() != s2.length()) {\n        return s1.length() > s2.length();\n    }\n    return s1 >= s2;\n}\n\nint main() {\n    string s1, s2;\n    cin >> s1 >> s2;\n    \n    // 判断是否需要交换，确保大减小\n    bool negative = false;\n    if (!compare(s1, s2)) {\n        swap(s1, s2);\n        negative = true;\n    }\n    \n    // 将字符串逆序存入数组\n    int len1 = s1.length(), len2 = s2.length();\n    for (int i = 0; i < len1; i++) {\n        a[i] = s1[len1 - 1 - i] - '0';\n    }\n    for (int i = 0; i < len2; i++) {\n        b[i] = s2[len2 - 1 - i] - '0';\n    }\n    \n    // 逐位相减\n    int len = len1;\n    for (int i = 0; i < len; i++) {\n        if (a[i] < b[i]) {\n            a[i + 1]--;      // 向高位借1\n            a[i] += 10;      // 当前位+10\n        }\n        c[i] = a[i] - b[i];\n    }\n    \n    // 去除前导0\n    while (len > 1 && c[len - 1] == 0) {\n        len--;\n    }\n    \n    // 输出结果\n    if (negative) cout << \"-\";\n    for (int i = len - 1; i >= 0; i--) {\n        cout << c[i];\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD112",
+          "code": "JD112",
+          "file": "JD112.cpp",
+          "title": "叠甲千层",
+          "language": "C++",
+          "lineCount": 53,
+          "source": "/*\n * JD112: 叠甲千层\n */\n\n#include <iostream>\n#include <cstring>\nusing namespace std;\n\nint a[100010], c[200010];\n\nint main() {\n    string s1;\n    int b;\n    cin >> s1 >> b;\n    \n    // 如果乘数为0，直接输出0\n    if (b == 0) {\n        cout << 0 << endl;\n        return 0;\n    }\n    \n    // 将大数字符串逆序存入数组\n    int len1 = s1.length();\n    for (int i = 0; i < len1; i++) {\n        a[i] = s1[len1 - 1 - i] - '0';\n    }\n    \n    // 逐位相乘\n    int carry = 0;\n    int len = 0;\n    \n    for (int i = 0; i < len1; i++) {\n        int product = a[i] * b + carry;\n        c[i] = product % 10;\n        carry = product / 10;\n        len = i + 1;\n    }\n    \n    // 处理最后的进位\n    while (carry > 0) {\n        c[len] = carry % 10;\n        carry /= 10;\n        len++;\n    }\n    \n    // 倒序输出\n    for (int i = len - 1; i >= 0; i--) {\n        cout << c[i];\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD113",
+          "code": "JD113",
+          "file": "JD113.cpp",
+          "title": "分金断玉",
+          "language": "C++",
+          "lineCount": 53,
+          "source": "/*\n * JD113: 分金断玉\n */\n\n#include <iostream>\n#include <cstring>\nusing namespace std;\n\nint a[100010], c[100010];\n\nint main() {\n    string s;\n    int b;\n    cin >> s >> b;\n    \n    // 特判：被除数为0\n    if (s == \"0\") {\n        cout << 0 << endl << 0 << endl;\n        return 0;\n    }\n    \n    int len = s.length();\n    \n    // 从高位到低位逐位计算\n    long long remainder = 0;\n    int idx = 0;\n    \n    for (int i = 0; i < len; i++) {\n        remainder = remainder * 10 + (s[i] - '0');\n        c[idx++] = remainder / b;\n        remainder %= b;\n    }\n    \n    // 去除前导0\n    int start = 0;\n    while (start < idx && c[start] == 0) {\n        start++;\n    }\n    \n    // 如果商为0，输出0\n    if (start == idx) {\n        cout << 0 << endl;\n    } else {\n        for (int i = start; i < idx; i++) {\n            cout << c[i];\n        }\n        cout << endl;\n    }\n    \n    cout << remainder << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD114",
+          "code": "JD114",
+          "file": "JD114.cpp",
+          "title": "双剑求和",
+          "language": "C++",
+          "lineCount": 37,
+          "source": "/*\n * JD114: 双剑求和\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], b[100010];\n\nint main() {\n    int n, m, x;\n    cin >> n >> m >> x;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < m; i++) {\n        cin >> b[i];\n    }\n    \n    // 双指针：i从头开始，j从尾开始\n    int i = 0, j = m - 1;\n    \n    while (i < n && j >= 0) {\n        int sum = a[i] + b[j];\n        if (sum == x) {\n            cout << i << \" \" << j << endl;\n            break;\n        } else if (sum < x) {\n            i++;  // 和太小，i右移\n        } else {\n            j--;  // 和太大，j左移\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD115",
+          "code": "JD115",
+          "file": "JD115.cpp",
+          "title": "双剑验序",
+          "language": "C++",
+          "lineCount": 36,
+          "source": "/*\n * JD115: 双剑验序\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], b[100010];\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < m; i++) {\n        cin >> b[i];\n    }\n    \n    int i = 0;  // 指向序列a\n    \n    for (int j = 0; j < m && i < n; j++) {\n        if (a[i] == b[j]) {\n            i++;  // 匹配成功，a的指针前进\n        }\n    }\n    \n    if (i == n) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD116",
+          "code": "JD116",
+          "file": "JD116.cpp",
+          "title": "无重之最",
+          "language": "C++",
+          "lineCount": 38,
+          "source": "/*\n * JD116: 无重之最\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], cnt[100010];\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    \n    int ans = 0;\n    \n    // 滑动窗口\n    for (int i = 0, j = 0; j < n; j++) {\n        cnt[a[j]]++;  // 右指针扩展，加入新元素\n        \n        // 如果出现重复，左指针收缩\n        while (cnt[a[j]] > 1) {\n            cnt[a[i]]--;\n            i++;\n        }\n        \n        // 更新最大长度\n        int len = j - i + 1;\n        if (len > ans) ans = len;\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD117",
+          "code": "JD117",
+          "file": "JD117.cpp",
+          "title": "独剑无双",
+          "language": "C++",
+          "lineCount": 22,
+          "source": "/*\n * JD117: 独剑无双\n */\n\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    int ans = 0;\n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        ans ^= x;  // 异或所有数\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD118",
+          "code": "JD118",
+          "file": "JD118.cpp",
+          "title": "剑招收放",
+          "language": "C++",
+          "lineCount": 23,
+          "source": "/*\n * JD118: 剑招收放\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    for (int mask = 1; mask < (1 << n); mask++) {\n        bool first = true;\n        for (int i = 0; i < n; i++) {\n            if (mask >> i & 1) {\n                if (!first) cout << ' ';\n                first = false;\n                cout << i + 1;\n            }\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD119",
+          "code": "JD119",
+          "file": "JD119.cpp",
+          "title": "剑阵组合",
+          "language": "C++",
+          "lineCount": 41,
+          "source": "/*\n * JD119: 剑阵组合\n */\n\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nint n, k;\nvector<int> path;\n\nvoid dfs(int start) {\n    // 剪枝：剩余数字不够凑满k个\n    if (path.size() + (n - start + 1) < k) {\n        return;\n    }\n    \n    // 选满了k个，输出\n    if (path.size() == k) {\n        for (int i = 0; i < path.size(); i++) {\n            if (i > 0) cout << \" \";\n            cout << path[i];\n        }\n        cout << endl;\n        return;\n    }\n    \n    // 从start开始尝试选\n    for (int i = start; i <= n; i++) {\n        path.push_back(i);\n        dfs(i + 1);\n        path.pop_back();\n    }\n}\n\nint main() {\n    cin >> n >> k;\n    dfs(1);\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD120",
+          "code": "JD120",
+          "file": "JD120.cpp",
+          "title": "江湖真假",
+          "language": "C++",
+          "lineCount": 73,
+          "source": "/*\n * JD120: 江湖真假\n */\n\n#include <iostream>\nusing namespace std;\n\nconst int MAXN = 50010;\nint fa[MAXN], dist[MAXN];  // dist[x] 表示x到根的距离\n\n// 查找根节点，同时路径压缩更新距离\nint find(int x) {\n    if (fa[x] != x) {\n        int root = find(fa[x]);\n        dist[x] += dist[fa[x]];  // 更新到根的距离\n        fa[x] = root;\n    }\n    return fa[x];\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    // 初始化并查集\n    for (int i = 1; i <= n; i++) {\n        fa[i] = i;\n        dist[i] = 0;\n    }\n    \n    int ans = 0;\n    \n    while (m--) {\n        int d, x, y;\n        cin >> d >> x >> y;\n        \n        // 超出范围，直接假话\n        if (x > n || y > n) {\n            ans++;\n            continue;\n        }\n        \n        int fx = find(x), fy = find(y);\n        \n        if (d == 1) {  // x和y是同类\n            if (fx == fy) {\n                // 已经在同一集合，检查关系是否一致\n                if ((dist[x] - dist[y]) % 3 != 0) {\n                    ans++;\n                }\n            } else {\n                // 合并：x和y同类，距离差为0\n                fa[fx] = fy;\n                dist[fx] = dist[y] - dist[x];\n            }\n        } else {  // d == 2，x吃y\n            if (fx == fy) {\n                // 已经在同一集合，检查关系是否正确\n                if ((dist[x] - dist[y] - 1) % 3 != 0) {\n                    ans++;\n                }\n            } else {\n                // 合并：x吃y，距离差为1\n                fa[fx] = fy;\n                dist[fx] = dist[y] - dist[x] + 1;\n            }\n        }\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD121",
+          "code": "JD121",
+          "file": "JD121.cpp",
+          "title": "蓄势之术",
+          "language": "C++",
+          "lineCount": 32,
+          "source": "/*\n * JD121: 蓄势之术\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], s[100010];\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    // 读取数组，下标从1开始\n    for (int i = 1; i <= n; i++) {\n        cin >> a[i];\n    }\n    \n    // 预处理前缀和\n    for (int i = 1; i <= n; i++) {\n        s[i] = s[i - 1] + a[i];\n    }\n    \n    // 处理查询\n    while (m--) {\n        int l, r;\n        cin >> l >> r;\n        cout << s[r] - s[l - 1] << endl;\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD122",
+          "code": "JD122",
+          "file": "JD122.cpp",
+          "title": "方阵蓄势",
+          "language": "C++",
+          "lineCount": 38,
+          "source": "/*\n * JD122: 方阵蓄势\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[1010][1010], s[1010][1010];\n\nint main() {\n    int n, m, q;\n    cin >> n >> m >> q;\n    \n    // 读取矩阵，下标从1开始\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= m; j++) {\n            cin >> a[i][j];\n        }\n    }\n    \n    // 预处理二维前缀和\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= m; j++) {\n            s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + a[i][j];\n        }\n    }\n    \n    // 处理查询\n    while (q--) {\n        int x1, y1, x2, y2;\n        cin >> x1 >> y1 >> x2 >> y2;\n        \n        int sum = s[x2][y2] - s[x1 - 1][y2] - s[x2][y1 - 1] + s[x1 - 1][y1 - 1];\n        cout << sum << endl;\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD123",
+          "code": "JD123",
+          "file": "JD123.cpp",
+          "title": "差分之术",
+          "language": "C++",
+          "lineCount": 41,
+          "source": "/*\n * JD123: 差分之术\n */\n\n#include <iostream>\nusing namespace std;\n\nint a[100010], b[100010];\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    // 读取原数组\n    for (int i = 1; i <= n; i++) {\n        cin >> a[i];\n    }\n    \n    // 构建差分数组\n    for (int i = 1; i <= n; i++) {\n        b[i] = a[i] - a[i - 1];\n    }\n    \n    // 处理m个区间加操作\n    while (m--) {\n        int l, r, c;\n        cin >> l >> r >> c;\n        b[l] += c;\n        b[r + 1] -= c;\n    }\n    \n    // 对差分数组求前缀和，得到最终序列\n    for (int i = 1; i <= n; i++) {\n        b[i] += b[i - 1];\n        if (i > 1) cout << \" \";\n        cout << b[i];\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD124",
+          "code": "JD124",
+          "file": "JD124.cpp",
+          "title": "方阵差分",
+          "language": "C++",
+          "lineCount": 47,
+          "source": "/*\n * JD124: 方阵差分\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 1010;\nlong long b[N][N];\n\nvoid add(int x1, int y1, int x2, int y2, long long c) {\n    b[x1][y1] += c;\n    b[x2 + 1][y1] -= c;\n    b[x1][y2 + 1] -= c;\n    b[x2 + 1][y2 + 1] += c;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m, q;\n    cin >> n >> m >> q;\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= m; j++) {\n            long long x;\n            cin >> x;\n            add(i, j, i, j, x);\n        }\n    }\n\n    while (q--) {\n        int x1, y1, x2, y2;\n        long long c;\n        cin >> x1 >> y1 >> x2 >> y2 >> c;\n        add(x1, y1, x2, y2, c);\n    }\n\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= m; j++) {\n            b[i][j] += b[i - 1][j] + b[i][j - 1] - b[i - 1][j - 1];\n            cout << b[i][j] << ' ';\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD125",
+          "code": "JD125",
+          "file": "JD125.cpp",
+          "title": "离散聚力",
+          "language": "C++",
+          "lineCount": 71,
+          "source": "/*\n * JD125: 离散聚力\n */\n\n#include <iostream>\n#include <algorithm>\n#include <vector>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nvector<PII> add, query;\nvector<int> alls;\nint a[300010], s[300010];\n\n// 二分查找x在alls中的位置（从1开始）\nint find(int x) {\n    int l = 0, r = alls.size() - 1;\n    while (l < r) {\n        int mid = (l + r) / 2;\n        if (alls[mid] >= x) r = mid;\n        else l = mid + 1;\n    }\n    return l + 1;  // 下标从1开始\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    // 读取n个加操作\n    for (int i = 0; i < n; i++) {\n        int x, c;\n        cin >> x >> c;\n        add.push_back({x, c});\n        alls.push_back(x);\n    }\n    \n    // 读取m个查询\n    for (int i = 0; i < m; i++) {\n        int l, r;\n        cin >> l >> r;\n        query.push_back({l, r});\n        alls.push_back(l);\n        alls.push_back(r);\n    }\n    \n    // 排序去重\n    sort(alls.begin(), alls.end());\n    alls.erase(unique(alls.begin(), alls.end()), alls.end());\n    \n    // 处理加操作\n    for (auto item : add) {\n        int idx = find(item.first);\n        a[idx] += item.second;\n    }\n    \n    // 求前缀和\n    for (int i = 1; i <= alls.size(); i++) {\n        s[i] = s[i - 1] + a[i];\n    }\n    \n    // 处理查询\n    for (auto item : query) {\n        int l = find(item.first);\n        int r = find(item.second);\n        cout << s[r] - s[l - 1] << endl;\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD126",
+          "code": "JD126",
+          "file": "JD126.cpp",
+          "title": "合围归阵",
+          "language": "C++",
+          "lineCount": 45,
+          "source": "/*\n * JD126: 合围归阵\n */\n\n#include <iostream>\n#include <algorithm>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nPII segs[100010];\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> segs[i].first >> segs[i].second;\n    }\n    \n    // 按左端点排序\n    sort(segs, segs + n);\n    \n    int res = 0;\n    int l = segs[0].first, r = segs[0].second;\n    \n    for (int i = 1; i < n; i++) {\n        // 当前区间与前一个区间相交或相邻，合并\n        if (segs[i].first <= r) {\n            r = max(r, segs[i].second);\n        } else {\n            // 无法合并，开启新区间\n            res++;\n            l = segs[i].first;\n            r = segs[i].second;\n        }\n    }\n    \n    // 加上最后一个区间\n    res++;\n    \n    cout << res << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD127",
+          "code": "JD127",
+          "file": "JD127.cpp",
+          "title": "一箭穿心",
+          "language": "C++",
+          "lineCount": 33,
+          "source": "/*\n * JD127: 一箭穿心\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    cin >> n;\n    vector<pair<long long, long long>> seg(n);\n    for (int i = 0; i < n; i++) {\n        cin >> seg[i].first >> seg[i].second;\n    }\n    sort(seg.begin(), seg.end(), [](const pair<long long, long long> &a, const pair<long long, long long> &b) {\n        return a.second < b.second;\n    });\n\n    int ans = 0;\n    long long last = LLONG_MIN;\n    for (int i = 0; i < n; i++) {\n        if (seg[i].first > last) {\n            ans++;\n            last = seg[i].second;\n        }\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD128",
+          "code": "JD128",
+          "file": "JD128.cpp",
+          "title": "合果成堆",
+          "language": "C++",
+          "lineCount": 36,
+          "source": "/*\n * JD128: 合果成堆\n */\n\n#include <iostream>\n#include <queue>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    priority_queue<int, vector<int>, greater<int>> heap;  // 小根堆\n    \n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        heap.push(x);\n    }\n    \n    int ans = 0;\n    \n    while (heap.size() > 1) {\n        // 取出最小的两堆\n        int a = heap.top(); heap.pop();\n        int b = heap.top(); heap.pop();\n        \n        int sum = a + b;\n        ans += sum;\n        heap.push(sum);\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD129",
+          "code": "JD129",
+          "file": "JD129.cpp",
+          "title": "中位之选",
+          "language": "C++",
+          "lineCount": 34,
+          "source": "/*\n * JD129: 中位之选\n */\n\n#include <iostream>\n#include <algorithm>\nusing namespace std;\n\nint a[100010];\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    \n    // 排序\n    sort(a, a + n);\n    \n    // 取中位数\n    int median = a[n / 2];\n    \n    // 计算所有点到中位数的距离之和\n    long long ans = 0;\n    for (int i = 0; i < n; i++) {\n        ans += abs(a[i] - median);\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD130",
+          "code": "JD130",
+          "file": "JD130.cpp",
+          "title": "铁链串珠",
+          "language": "C++",
+          "lineCount": 71,
+          "source": "/*\n * JD130: 铁链串珠\n */\n\n#include <iostream>\nusing namespace std;\n\nconst int N = 100010;\n\nint head = -1;  // 头结点下标，-1表示空\nint val[N];     // 存储节点的值\nint ne[N];      // 存储下一个节点的下标\nint idx = 0;    // 当前已使用的节点数（也是新节点的下标）\n\n// 在头部插入x\nvoid insertHead(int x) {\n    val[idx] = x;\n    ne[idx] = head;\n    head = idx;\n    idx++;\n}\n\n// 在第k个插入的元素后面插入x\nvoid insertAfter(int k, int x) {\n    val[idx] = x;\n    ne[idx] = ne[k];\n    ne[k] = idx;\n    idx++;\n}\n\n// 删除第k个插入的元素后面的元素\nvoid deleteAfter(int k) {\n    ne[k] = ne[ne[k]];\n}\n\nint main() {\n    int m;\n    cin >> m;\n    \n    while (m--) {\n        char op;\n        cin >> op;\n        \n        if (op == 'H') {\n            int x;\n            cin >> x;\n            insertHead(x);\n        } else if (op == 'I') {\n            int k, x;\n            cin >> k >> x;\n            insertAfter(k - 1, x);  // 第k个插入的元素下标为k-1\n        } else if (op == 'D') {\n            int k;\n            cin >> k;\n            if (k == 0) {\n                // 删除头结点\n                head = ne[head];\n            } else {\n                deleteAfter(k - 1);\n            }\n        }\n    }\n    \n    // 输出链表\n    for (int i = head; i != -1; i = ne[i]) {\n        cout << val[i] << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD131",
+          "code": "JD131",
+          "file": "JD131.cpp",
+          "title": "叠石成塔",
+          "language": "C++",
+          "lineCount": 38,
+          "source": "/*\n * JD131: 叠石成塔\n */\n\n#include <iostream>\n#include <string>\nusing namespace std;\n\nconst int N = 100010;\nint st[N], tt = 0;  // tt指向栈顶，tt=0表示空栈\n\nint main() {\n    int m;\n    cin >> m;\n    \n    while (m--) {\n        string op;\n        cin >> op;\n        \n        if (op == \"push\") {\n            int x;\n            cin >> x;\n            st[++tt] = x;  // 入栈\n        } else if (op == \"pop\") {\n            tt--;  // 出栈\n        } else if (op == \"query\") {\n            cout << st[tt] << endl;  // 查询栈顶\n        } else if (op == \"empty\") {\n            if (tt == 0) {\n                cout << \"YES\" << endl;\n            } else {\n                cout << \"NO\" << endl;\n            }\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD132",
+          "code": "JD132",
+          "file": "JD132.cpp",
+          "title": "列阵待命",
+          "language": "C++",
+          "lineCount": 38,
+          "source": "/*\n * JD132: 列阵待命\n */\n\n#include <iostream>\n#include <string>\nusing namespace std;\n\nconst int N = 100010;\nint q[N], hh = 0, tt = -1;  // hh队头，tt队尾，hh>tt表示空队列\n\nint main() {\n    int m;\n    cin >> m;\n    \n    while (m--) {\n        string op;\n        cin >> op;\n        \n        if (op == \"push\") {\n            int x;\n            cin >> x;\n            q[++tt] = x;  // 入队\n        } else if (op == \"pop\") {\n            hh++;  // 出队\n        } else if (op == \"query\") {\n            cout << q[hh] << endl;  // 查询队头\n        } else if (op == \"empty\") {\n            if (hh > tt) {\n                cout << \"YES\" << endl;\n            } else {\n                cout << \"NO\" << endl;\n            }\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD133",
+          "code": "JD133",
+          "file": "JD133.cpp",
+          "title": "算筹求值",
+          "language": "C++",
+          "lineCount": 76,
+          "source": "/*\n * JD133: 算筹求值\n */\n\n#include <iostream>\n#include <stack>\n#include <string>\nusing namespace std;\n\nstack<int> num;   // 数字栈\nstack<char> op;   // 运算符栈\n\n// 获取运算符优先级\nint priority(char c) {\n    if (c == '+' || c == '-') return 1;\n    if (c == '*' || c == '/') return 2;\n    return 0;\n}\n\n// 计算一次\nvoid eval() {\n    int b = num.top(); num.pop();\n    int a = num.top(); num.pop();\n    char c = op.top(); op.pop();\n    \n    int res;\n    if (c == '+') res = a + b;\n    else if (c == '-') res = a - b;\n    else if (c == '*') res = a * b;\n    else res = a / b;\n    \n    num.push(res);\n}\n\nint main() {\n    string s;\n    cin >> s;\n    \n    for (int i = 0; i < s.length(); i++) {\n        char c = s[i];\n        \n        if (isdigit(c)) {\n            // 解析数字（可能是多位数）\n            int x = 0;\n            while (i < s.length() && isdigit(s[i])) {\n                x = x * 10 + (s[i] - '0');\n                i++;\n            }\n            i--;\n            num.push(x);\n        } else if (c == '(') {\n            op.push(c);\n        } else if (c == ')') {\n            // 一直算到左括号\n            while (op.top() != '(') {\n                eval();\n            }\n            op.pop();  // 弹出左括号\n        } else {\n            // 运算符：如果栈顶优先级 >= 当前优先级，先算栈顶\n            while (!op.empty() && priority(op.top()) >= priority(c)) {\n                eval();\n            }\n            op.push(c);\n        }\n    }\n    \n    // 计算剩余的运算符\n    while (!op.empty()) {\n        eval();\n    }\n    \n    cout << num.top() << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD134",
+          "code": "JD134",
+          "file": "JD134.cpp",
+          "title": "一山更比",
+          "language": "C++",
+          "lineCount": 39,
+          "source": "/*\n * JD134: 一山更比\n */\n\n#include <iostream>\nusing namespace std;\n\nconst int N = 100010;\nint st[N], tt = 0;  // 单调栈\n\nint main() {\n    int n;\n    cin >> n;\n    \n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        \n        // 弹出所有比当前元素大的元素（维护单调递增）\n        while (tt > 0 && st[tt] >= x) {\n            tt--;\n        }\n        \n        // 栈顶就是左边第一个比x小的数\n        if (tt > 0) {\n            cout << st[tt];\n        } else {\n            cout << -1;\n        }\n        \n        if (i < n - 1) cout << \" \";\n        \n        // 当前元素入栈\n        st[++tt] = x;\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD135",
+          "code": "JD135",
+          "file": "JD135.cpp",
+          "title": "窗移镜照",
+          "language": "C++",
+          "lineCount": 37,
+          "source": "/*\n * JD135: 窗移镜照\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 1000010;\nint a[N], q[N];\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, k;\n    cin >> n >> k;\n    for (int i = 0; i < n; i++) cin >> a[i];\n\n    int hh = 0, tt = -1;\n    for (int i = 0; i < n; i++) {\n        if (hh <= tt && q[hh] < i - k + 1) hh++;\n        while (hh <= tt && a[q[tt]] >= a[i]) tt--;\n        q[++tt] = i;\n        if (i >= k - 1) cout << a[q[hh]] << ' ';\n    }\n    cout << '\\n';\n\n    hh = 0, tt = -1;\n    for (int i = 0; i < n; i++) {\n        if (hh <= tt && q[hh] < i - k + 1) hh++;\n        while (hh <= tt && a[q[tt]] <= a[i]) tt--;\n        q[++tt] = i;\n        if (i >= k - 1) cout << a[q[hh]] << ' ';\n    }\n    cout << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD136",
+          "code": "JD136",
+          "file": "JD136.cpp",
+          "title": "剑谱寻踪",
+          "language": "C++",
+          "lineCount": 46,
+          "source": "/*\n * JD136: 剑谱寻踪\n */\n\n#include <iostream>\n#include <cstring>\nusing namespace std;\n\nconst int N = 100010, M = 1000010;\nchar p[N], s[M];\nint ne[N];\n\nint main() {\n    int n, m;\n    \n    // 读取模式串\n    cin >> n >> p + 1;  // 下标从1开始\n    \n    // 读取文本串\n    cin >> m >> s + 1;\n    \n    // 预处理next数组\n    for (int i = 2, j = 0; i <= n; i++) {\n        while (j && p[i] != p[j + 1]) j = ne[j];\n        if (p[i] == p[j + 1]) j++;\n        ne[i] = j;\n    }\n    \n    // KMP匹配\n    bool first = true;\n    for (int i = 1, j = 0; i <= m; i++) {\n        while (j && s[i] != p[j + 1]) j = ne[j];\n        if (s[i] == p[j + 1]) j++;\n        \n        if (j == n) {\n            // 匹配成功\n            if (!first) cout << \" \";\n            cout << i - n;  // 起始位置（从0开始）\n            first = false;\n            j = ne[j];  // 继续查找下一个\n        }\n    }\n    cout << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD137",
+          "code": "JD137",
+          "file": "JD137.cpp",
+          "title": "堆石成丘",
+          "language": "C++",
+          "lineCount": 85,
+          "source": "/*\n * JD137: 堆石成丘\n */\n\n#include <iostream>\n#include <cstring>\n#include <string>\nusing namespace std;\n\nconst int N = 100010;\nint h[N];       // 堆数组\nint ph[N];      // ph[k] = 第k个插入的元素在堆中的下标\nint hp[N];      // hp[i] = 堆中下标为i的元素是第几个插入的\nint sz = 0;     // 堆的大小\nint idx = 0;    // 插入序号\n\n// 交换堆中两个位置\nvoid heap_swap(int a, int b) {\n    swap(ph[hp[a]], ph[hp[b]]);\n    swap(hp[a], hp[b]);\n    swap(h[a], h[b]);\n}\n\n// 上浮\nvoid up(int u) {\n    while (u / 2 && h[u] < h[u / 2]) {\n        heap_swap(u, u / 2);\n        u /= 2;\n    }\n}\n\n// 下沉\nvoid down(int u) {\n    int t = u;\n    if (u * 2 <= sz && h[u * 2] < h[t]) t = u * 2;\n    if (u * 2 + 1 <= sz && h[u * 2 + 1] < h[t]) t = u * 2 + 1;\n    if (t != u) {\n        heap_swap(u, t);\n        down(t);\n    }\n}\n\nint main() {\n    int m;\n    cin >> m;\n    \n    while (m--) {\n        string op;\n        cin >> op;\n        \n        if (op == \"I\") {\n            int x;\n            cin >> x;\n            sz++;\n            idx++;\n            ph[idx] = sz;\n            hp[sz] = idx;\n            h[sz] = x;\n            up(sz);\n        } else if (op == \"PM\") {\n            cout << h[1] << endl;\n        } else if (op == \"DM\") {\n            heap_swap(1, sz);\n            sz--;\n            down(1);\n        } else if (op == \"D\") {\n            int k;\n            cin >> k;\n            int u = ph[k];  // 第k个插入的元素在堆中的位置\n            heap_swap(u, sz);\n            sz--;\n            down(u);\n            up(u);\n        } else if (op == \"C\") {\n            int k, x;\n            cin >> k >> x;\n            int u = ph[k];\n            h[u] = x;\n            down(u);\n            up(u);\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD138",
+          "code": "JD138",
+          "file": "JD138.cpp",
+          "title": "合帮并派",
+          "language": "C++",
+          "lineCount": 50,
+          "source": "/*\n * JD138: 合帮并派\n */\n\n#include <iostream>\nusing namespace std;\n\nconst int N = 100010;\nint fa[N];  // 父节点数组\n\n// 查找根节点（带路径压缩）\nint find(int x) {\n    if (fa[x] != x) {\n        fa[x] = find(fa[x]);  // 路径压缩\n    }\n    return fa[x];\n}\n\n// 合并两个集合\nvoid unite(int a, int b) {\n    fa[find(a)] = find(b);\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    // 初始化：每个元素独立为一个集合\n    for (int i = 1; i <= n; i++) {\n        fa[i] = i;\n    }\n    \n    while (m--) {\n        char op;\n        int a, b;\n        cin >> op >> a >> b;\n        \n        if (op == 'M') {\n            unite(a, b);\n        } else if (op == 'Q') {\n            if (find(a) == find(b)) {\n                cout << \"Yes\" << endl;\n            } else {\n                cout << \"No\" << endl;\n            }\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD139",
+          "code": "JD139",
+          "file": "JD139.cpp",
+          "title": "门派计数",
+          "language": "C++",
+          "lineCount": 55,
+          "source": "/*\n * JD139: 门派计数\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 1000010;\nint parent_[N], sz_[N];\n\nint find_root(int x) {\n    int r = x;\n    while (parent_[r] != r) r = parent_[r];\n    while (parent_[x] != x) {\n        int t = parent_[x];\n        parent_[x] = r;\n        x = t;\n    }\n    return r;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m;\n    cin >> n >> m;\n    for (int i = 1; i <= n; i++) {\n        parent_[i] = i;\n        sz_[i] = 1;\n    }\n\n    while (m--) {\n        string op;\n        cin >> op;\n        if (op == \"C\") {\n            int a, b;\n            cin >> a >> b;\n            int ra = find_root(a), rb = find_root(b);\n            if (ra != rb) {\n                parent_[ra] = rb;\n                sz_[rb] += sz_[ra];\n            }\n        } else if (op == \"Q1\") {\n            int a, b;\n            cin >> a >> b;\n            cout << (find_root(a) == find_root(b) ? \"Yes\" : \"No\") << '\\n';\n        } else {\n            int a;\n            cin >> a;\n            cout << sz_[find_root(a)] << '\\n';\n        }\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD140",
+          "code": "JD140",
+          "file": "JD140.cpp",
+          "title": "三界相克",
+          "language": "C++",
+          "lineCount": 73,
+          "source": "/*\n * JD140: 三界相克\n */\n\n#include <iostream>\nusing namespace std;\n\nconst int N = 50010;\nint fa[N], dist[N];  // dist[x] 表示x到根的距离\n\n// 查找根节点，同时路径压缩更新距离\nint find(int x) {\n    if (fa[x] != x) {\n        int root = find(fa[x]);\n        dist[x] += dist[fa[x]];\n        fa[x] = root;\n    }\n    return fa[x];\n}\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    \n    // 初始化\n    for (int i = 1; i <= n; i++) {\n        fa[i] = i;\n        dist[i] = 0;\n    }\n    \n    int ans = 0;\n    \n    while (k--) {\n        int d, x, y;\n        cin >> d >> x >> y;\n        \n        // 超出范围，直接假话\n        if (x > n || y > n) {\n            ans++;\n            continue;\n        }\n        \n        int fx = find(x), fy = find(y);\n        \n        if (d == 1) {  // x和y是同类\n            if (fx == fy) {\n                // 已经在同一集合，检查关系是否一致\n                if ((dist[x] - dist[y]) % 3 != 0) {\n                    ans++;\n                }\n            } else {\n                // 合并：x和y同类，距离差为0\n                fa[fx] = fy;\n                dist[fx] = dist[y] - dist[x];\n            }\n        } else {  // d == 2，x吃y\n            if (fx == fy) {\n                // 已经在同一集合，检查关系是否正确\n                if ((dist[x] - dist[y] - 1) % 3 != 0) {\n                    ans++;\n                }\n            } else {\n                // 合并：x吃y，距离差为1\n                fa[fx] = fy;\n                dist[fx] = dist[y] - dist[x] + 1;\n            }\n        }\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
         }
       ]
     },
@@ -2703,6 +3327,230 @@ window.XMUOJ_SITE_DATA = {
           "language": "C++",
           "lineCount": 80,
           "source": "/*\n * LinK47: 寻找林克的回忆(2)\n */\n\n#include <cstdio>\n#include <cstring>\n\nchar g[82];\nint row_mask[9], col_mask[9], box_mask[9];\nchar line[200];\n\nint box_id(int r, int c) {\n    return r / 3 * 3 + c / 3;\n}\n\nbool dfs(int empty_count) {\n    if (empty_count == 0) return true;\n\n    int best_pos = -1, best_mask = 0, best_count = 10;\n    for (int pos = 0; pos < 81; pos++) {\n        if (g[pos] == '.') {\n            int r = pos / 9, c = pos % 9;\n            int used = row_mask[r] | col_mask[c] | box_mask[box_id(r, c)];\n            int mask = (~used) & 0x1ff;\n            int cnt = __builtin_popcount((unsigned)mask);\n            if (cnt < best_count) {\n                best_count = cnt;\n                best_pos = pos;\n                best_mask = mask;\n                if (cnt == 0) return false;\n                if (cnt == 1) break;\n            }\n        }\n    }\n\n    int r = best_pos / 9, c = best_pos % 9, b = box_id(r, c);\n    for (int mask = best_mask; mask; mask -= mask & -mask) {\n        int bit = mask & -mask;\n        int digit = __builtin_ctz((unsigned)bit);\n        g[best_pos] = char('1' + digit);\n        row_mask[r] |= bit;\n        col_mask[c] |= bit;\n        box_mask[b] |= bit;\n        if (dfs(empty_count - 1)) return true;\n        row_mask[r] ^= bit;\n        col_mask[c] ^= bit;\n        box_mask[b] ^= bit;\n        g[best_pos] = '.';\n    }\n    return false;\n}\n\nint main() {\n    while (scanf(\"%s\", line) == 1) {\n        if (strcmp(line, \"end\") == 0) break;\n\n        memset(row_mask, 0, sizeof(row_mask));\n        memset(col_mask, 0, sizeof(col_mask));\n        memset(box_mask, 0, sizeof(box_mask));\n\n        int empty_count = 0;\n        for (int pos = 0; pos < 81; pos++) {\n            g[pos] = line[pos];\n            if (g[pos] == '.') {\n                empty_count++;\n            } else {\n                int r = pos / 9, c = pos % 9;\n                int bit = 1 << (g[pos] - '1');\n                row_mask[r] |= bit;\n                col_mask[c] |= bit;\n                box_mask[box_id(r, c)] |= bit;\n            }\n        }\n        g[81] = '\\0';\n\n        dfs(empty_count);\n        puts(g);\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK48",
+          "code": "LinK48",
+          "file": "LinK48.cpp",
+          "title": "寻找林克的回忆(3)",
+          "language": "C++",
+          "lineCount": 117,
+          "source": "/*\n * LinK48: 寻找林克的回忆(3)\n */\n\n#include <iostream>\n#include <algorithm>\nusing namespace std;\n\nint g[9][9];\nbool row[9][10], col[9][10], box[3][3][10];\nint maxScore = -1;\n\n// 靶形分值分布\nint score[9][9] = {\n    {6, 6, 6, 6, 6, 6, 6, 6, 6},\n    {6, 7, 7, 7, 7, 7, 7, 7, 6},\n    {6, 7, 8, 8, 8, 8, 8, 7, 6},\n    {6, 7, 8, 9, 9, 9, 8, 7, 6},\n    {6, 7, 8, 9, 10, 9, 8, 7, 6},\n    {6, 7, 8, 9, 9, 9, 8, 7, 6},\n    {6, 7, 8, 8, 8, 8, 8, 7, 6},\n    {6, 7, 7, 7, 7, 7, 7, 7, 6},\n    {6, 6, 6, 6, 6, 6, 6, 6, 6}\n};\n\n// 计算当前已填数字的分数\nint calcScore() {\n    int sum = 0;\n    for (int i = 0; i < 9; i++) {\n        for (int j = 0; j < 9; j++) {\n            sum += g[i][j] * score[i][j];\n        }\n    }\n    return sum;\n}\n\n// 找到可选数字最少的空格\nint findBestPos(int &x, int &y) {\n    int minOptions = 10;\n    bool found = false;\n    \n    for (int i = 0; i < 9; i++) {\n        for (int j = 0; j < 9; j++) {\n            if (g[i][j] != 0) continue;\n            \n            int bx = i / 3, by = j / 3;\n            int options = 0;\n            for (int num = 1; num <= 9; num++) {\n                if (!row[i][num] && !col[j][num] && !box[bx][by][num]) {\n                    options++;\n                }\n            }\n            \n            if (options == 0) return -1;  // 无解\n            if (options < minOptions) {\n                minOptions = options;\n                x = i;\n                y = j;\n                found = true;\n                if (options == 1) return 1;\n            }\n        }\n    }\n    \n    return found ? 1 : 0;  // 0表示全部填完\n}\n\nvoid dfs() {\n    int x, y;\n    int status = findBestPos(x, y);\n    \n    if (status == 0) {  // 全部填完\n        int total = calcScore();\n        if (total > maxScore) {\n            maxScore = total;\n        }\n        return;\n    }\n    \n    if (status == -1) return;  // 无解\n    \n    int bx = x / 3, by = y / 3;\n    \n    // 从大到小尝试数字，优先找到高分解\n    for (int num = 9; num >= 1; num--) {\n        if (!row[x][num] && !col[y][num] && !box[bx][by][num]) {\n            row[x][num] = col[y][num] = box[bx][by][num] = true;\n            g[x][y] = num;\n            \n            dfs();\n            \n            g[x][y] = 0;\n            row[x][num] = col[y][num] = box[bx][by][num] = false;\n        }\n    }\n}\n\nint main() {\n    // 读取输入\n    for (int i = 0; i < 9; i++) {\n        for (int j = 0; j < 9; j++) {\n            cin >> g[i][j];\n            if (g[i][j] != 0) {\n                int num = g[i][j];\n                row[i][num] = true;\n                col[j][num] = true;\n                box[i / 3][j / 3][num] = true;\n            }\n        }\n    }\n    \n    dfs();\n    \n    cout << maxScore << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK49",
+          "code": "LinK49",
+          "file": "LinK49.cpp",
+          "title": "寻找林克的回忆(4)",
+          "language": "C++",
+          "lineCount": 155,
+          "source": "/*\n * LinK49: 寻找林克的回忆(4)\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 16;\nconst int COLS = 1024;\nconst int MAXNODE = 20000;\n\nint L[MAXNODE], R[MAXNODE], U[MAXNODE], D[MAXNODE], C[MAXNODE], S[COLS + 5];\nint rowId[MAXNODE], ans[300], nodeCnt;\nint rr[5000], cc[5000], dd[5000], rowCnt;\nchar g[N][N + 1];\n\nint box_id(int r, int c) {\n    return r / 4 * 4 + c / 4;\n}\n\nvoid init() {\n    for (int i = 0; i <= COLS; i++) {\n        L[i] = i - 1;\n        R[i] = i + 1;\n        U[i] = D[i] = i;\n        S[i] = 0;\n    }\n    L[0] = COLS;\n    R[COLS] = 0;\n    nodeCnt = COLS;\n    rowCnt = 0;\n}\n\nvoid add_row(int rid, int cols[4]) {\n    int first = 0;\n    for (int i = 0; i < 4; i++) {\n        int col = cols[i];\n        int p = ++nodeCnt;\n        C[p] = col;\n        rowId[p] = rid;\n        S[col]++;\n        U[p] = U[col];\n        D[p] = col;\n        D[U[col]] = p;\n        U[col] = p;\n        if (!first) {\n            first = p;\n            L[p] = R[p] = p;\n        } else {\n            L[p] = L[first];\n            R[p] = first;\n            R[L[first]] = p;\n            L[first] = p;\n        }\n    }\n}\n\nvoid cover(int c) {\n    L[R[c]] = L[c];\n    R[L[c]] = R[c];\n    for (int i = D[c]; i != c; i = D[i]) {\n        for (int j = R[i]; j != i; j = R[j]) {\n            U[D[j]] = U[j];\n            D[U[j]] = D[j];\n            S[C[j]]--;\n        }\n    }\n}\n\nvoid uncover(int c) {\n    for (int i = U[c]; i != c; i = U[i]) {\n        for (int j = L[i]; j != i; j = L[j]) {\n            S[C[j]]++;\n            U[D[j]] = j;\n            D[U[j]] = j;\n        }\n    }\n    L[R[c]] = c;\n    R[L[c]] = c;\n}\n\nbool dance(int dep) {\n    if (R[0] == 0) {\n        for (int i = 0; i < dep; i++) {\n            int id = ans[i];\n            g[rr[id]][cc[id]] = char('A' + dd[id]);\n        }\n        return true;\n    }\n\n    int c = R[0];\n    for (int i = R[0]; i != 0; i = R[i]) {\n        if (S[i] < S[c]) c = i;\n    }\n    if (S[c] == 0) return false;\n\n    cover(c);\n    for (int i = D[c]; i != c; i = D[i]) {\n        ans[dep] = rowId[i];\n        for (int j = R[i]; j != i; j = R[j]) cover(C[j]);\n        if (dance(dep + 1)) return true;\n        for (int j = L[i]; j != i; j = L[j]) uncover(C[j]);\n    }\n    uncover(c);\n    return false;\n}\n\nvoid add_candidate(int r, int c, int d) {\n    int rid = rowCnt++;\n    rr[rid] = r;\n    cc[rid] = c;\n    dd[rid] = d;\n    int cols[4] = {\n        r * 16 + c + 1,\n        256 + r * 16 + d + 1,\n        512 + c * 16 + d + 1,\n        768 + box_id(r, c) * 16 + d + 1\n    };\n    add_row(rid, cols);\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    string line;\n    bool firstCase = true;\n    while (true) {\n        vector<string> lines;\n        while ((int)lines.size() < N && getline(cin, line)) {\n            if (!line.empty()) lines.push_back(line);\n        }\n        if ((int)lines.size() < N) break;\n\n        init();\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                g[i][j] = lines[i][j];\n                if (g[i][j] == '-') {\n                    for (int d = 0; d < N; d++) add_candidate(i, j, d);\n                } else {\n                    add_candidate(i, j, g[i][j] - 'A');\n                }\n            }\n            g[i][N] = '\\0';\n        }\n\n        dance(0);\n        if (!firstCase) cout << '\\n';\n        firstCase = false;\n        for (int i = 0; i < N; i++) cout << g[i] << '\\n';\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK50",
+          "code": "LinK50",
+          "file": "LinK50.cpp",
+          "title": "寻找林克的回忆(4)",
+          "language": "C++",
+          "lineCount": 155,
+          "source": "/*\n * LinK50: 寻找林克的回忆(4)\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 16;\nconst int COLS = 1024;\nconst int MAXNODE = 20000;\n\nint L[MAXNODE], R[MAXNODE], U[MAXNODE], D[MAXNODE], C[MAXNODE], S[COLS + 5];\nint rowId[MAXNODE], ans[300], nodeCnt;\nint rr[5000], cc[5000], dd[5000], rowCnt;\nchar g[N][N + 1];\n\nint box_id(int r, int c) {\n    return r / 4 * 4 + c / 4;\n}\n\nvoid init() {\n    for (int i = 0; i <= COLS; i++) {\n        L[i] = i - 1;\n        R[i] = i + 1;\n        U[i] = D[i] = i;\n        S[i] = 0;\n    }\n    L[0] = COLS;\n    R[COLS] = 0;\n    nodeCnt = COLS;\n    rowCnt = 0;\n}\n\nvoid add_row(int rid, int cols[4]) {\n    int first = 0;\n    for (int i = 0; i < 4; i++) {\n        int col = cols[i];\n        int p = ++nodeCnt;\n        C[p] = col;\n        rowId[p] = rid;\n        S[col]++;\n        U[p] = U[col];\n        D[p] = col;\n        D[U[col]] = p;\n        U[col] = p;\n        if (!first) {\n            first = p;\n            L[p] = R[p] = p;\n        } else {\n            L[p] = L[first];\n            R[p] = first;\n            R[L[first]] = p;\n            L[first] = p;\n        }\n    }\n}\n\nvoid cover(int c) {\n    L[R[c]] = L[c];\n    R[L[c]] = R[c];\n    for (int i = D[c]; i != c; i = D[i]) {\n        for (int j = R[i]; j != i; j = R[j]) {\n            U[D[j]] = U[j];\n            D[U[j]] = D[j];\n            S[C[j]]--;\n        }\n    }\n}\n\nvoid uncover(int c) {\n    for (int i = U[c]; i != c; i = U[i]) {\n        for (int j = L[i]; j != i; j = L[j]) {\n            S[C[j]]++;\n            U[D[j]] = j;\n            D[U[j]] = j;\n        }\n    }\n    L[R[c]] = c;\n    R[L[c]] = c;\n}\n\nbool dance(int dep) {\n    if (R[0] == 0) {\n        for (int i = 0; i < dep; i++) {\n            int id = ans[i];\n            g[rr[id]][cc[id]] = char('A' + dd[id]);\n        }\n        return true;\n    }\n\n    int c = R[0];\n    for (int i = R[0]; i != 0; i = R[i]) {\n        if (S[i] < S[c]) c = i;\n    }\n    if (S[c] == 0) return false;\n\n    cover(c);\n    for (int i = D[c]; i != c; i = D[i]) {\n        ans[dep] = rowId[i];\n        for (int j = R[i]; j != i; j = R[j]) cover(C[j]);\n        if (dance(dep + 1)) return true;\n        for (int j = L[i]; j != i; j = L[j]) uncover(C[j]);\n    }\n    uncover(c);\n    return false;\n}\n\nvoid add_candidate(int r, int c, int d) {\n    int rid = rowCnt++;\n    rr[rid] = r;\n    cc[rid] = c;\n    dd[rid] = d;\n    int cols[4] = {\n        r * 16 + c + 1,\n        256 + r * 16 + d + 1,\n        512 + c * 16 + d + 1,\n        768 + box_id(r, c) * 16 + d + 1\n    };\n    add_row(rid, cols);\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    string line;\n    bool firstCase = true;\n    while (true) {\n        vector<string> lines;\n        while ((int)lines.size() < N && getline(cin, line)) {\n            if (!line.empty()) lines.push_back(line);\n        }\n        if ((int)lines.size() < N) break;\n\n        init();\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                g[i][j] = lines[i][j];\n                if (g[i][j] == '-') {\n                    for (int d = 0; d < N; d++) add_candidate(i, j, d);\n                } else {\n                    add_candidate(i, j, g[i][j] - 'A');\n                }\n            }\n            g[i][N] = '\\0';\n        }\n\n        dance(0);\n        if (!firstCase) cout << '\\n';\n        firstCase = false;\n        for (int i = 0; i < N; i++) cout << g[i] << '\\n';\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK51",
+          "code": "LinK51",
+          "file": "LinK51.cpp",
+          "title": "净化迷雾森林(广搜)",
+          "language": "C++",
+          "lineCount": 39,
+          "source": "/*\n * LinK51: 净化迷雾森林(广搜)\n */\n\n#include <iostream>\n#include <cstring>\nusing namespace std;\n \nint W, H, sx, sy, ans;\nchar g[25][25];\nbool vis[25][25];\nint dx[] = {0, 0, -1, 1};\nint dy[] = {-1, 1, 0, 0};\n \nvoid dfs(int x, int y) {\n    vis[x][y] = true;\n    ans++;\n    for (int d = 0; d < 4; d++) {\n        int nx = x + dx[d], ny = y + dy[d];\n        if (nx >= 0 && nx < H && ny >= 0 && ny < W && !vis[nx][ny] && g[nx][ny] != '#')\n            dfs(nx, ny);\n    }\n}\n \nint main() {\n    while (cin >> W >> H && (W || H)) {\n        for (int i = 0; i < H; i++) {\n            cin >> g[i];\n            for (int j = 0; j < W; j++) {\n                if (g[i][j] == '@') { sx = i; sy = j; }\n            }\n        }\n        memset(vis, 0, sizeof(vis));\n        ans = 0;\n        dfs(sx, sy);\n        cout << ans << endl;\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK52",
+          "code": "LinK52",
+          "file": "LinK52.cpp",
+          "title": "波克布林的巡逻范围",
+          "language": "C++",
+          "lineCount": 61,
+          "source": "/*\n * LinK52: 波克布林的巡逻范围\n */\n\n#include <iostream>\n#include <queue>\n#include <cstring>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nint k, m, n;\nbool vis[55][55];\n\n// 计算一个数的各位数字之和\nint digitSum(int x) {\n    int s = 0;\n    while (x) {\n        s += x % 10;\n        x /= 10;\n    }\n    return s;\n}\n\nint bfs() {\n    if (m == 0 || n == 0) return 0;\n    \n    queue<PII> q;\n    q.push({0, 0});\n    vis[0][0] = true;\n    int cnt = 1;\n    \n    int dx[] = {-1, 0, 1, 0};\n    int dy[] = {0, 1, 0, -1};\n    \n    while (!q.empty()) {\n        auto [x, y] = q.front(); q.pop();\n        \n        for (int i = 0; i < 4; i++) {\n            int nx = x + dx[i];\n            int ny = y + dy[i];\n            \n            if (nx < 0 || nx >= m || ny < 0 || ny >= n) continue;\n            if (vis[nx][ny]) continue;\n            if (digitSum(nx) + digitSum(ny) > k) continue;\n            \n            vis[nx][ny] = true;\n            q.push({nx, ny});\n            cnt++;\n        }\n    }\n    \n    return cnt;\n}\n\nint main() {\n    cin >> k >> m >> n;\n    memset(vis, 0, sizeof(vis));\n    cout << bfs() << endl;\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK53",
+          "code": "LinK53",
+          "file": "LinK53.cpp",
+          "title": "加农的入侵",
+          "language": "C++",
+          "lineCount": 45,
+          "source": "/*\n * LinK53: 加农的入侵\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 105;\nchar g[N][N];\nint dista[N][N];\nint dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1};\nint dy[8] = {-1, 0, 1, -1, 1, -1, 0, 1};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int X, Y, Mx, My;\n    cin >> X >> Y >> Mx >> My;\n    for (int i = 0; i < Y; i++) cin >> g[i];\n\n    memset(dista, -1, sizeof(dista));\n    queue<pair<int, int>> q;\n    int sx = My - 1, sy = Mx - 1;\n    q.push({sx, sy});\n    dista[sx][sy] = 0;\n\n    int ans = 0;\n    while (!q.empty()) {\n        pair<int, int> cur = q.front();\n        q.pop();\n        int x = cur.first, y = cur.second;\n        ans = max(ans, dista[x][y]);\n        for (int k = 0; k < 8; k++) {\n            int nx = x + dx[k], ny = y + dy[k];\n            if (nx < 0 || nx >= Y || ny < 0 || ny >= X) continue;\n            if (g[nx][ny] == '*' || dista[nx][ny] != -1) continue;\n            dista[nx][ny] = dista[x][y] + 1;\n            q.push({nx, ny});\n        }\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK54",
+          "code": "LinK54",
+          "file": "LinK54.cpp",
+          "title": "骑士林克的怜悯(2)",
+          "language": "C++",
+          "lineCount": 73,
+          "source": "/*\n * LinK54: 骑士林克的怜悯(2)\n */\n\n#include <iostream>\n#include <queue>\n#include <cstring>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nconst int N = 155;\nchar g[N][N];\nint dist[N][N];\n\n// 骑士的8个移动方向（日字形）\nint dx[] = {-2, -1, 1, 2, 2, 1, -1, -2};\nint dy[] = {1, 2, 2, 1, -1, -2, -2, -1};\n\nint main() {\n    int col, row;  // col列，row行\n    cin >> col >> row;\n    \n    int sx, sy, ex, ey;\n    \n    for (int i = 0; i < row; i++) {\n        cin >> g[i];\n        for (int j = 0; j < col; j++) {\n            if (g[i][j] == 'K') {\n                sx = i;\n                sy = j;\n            }\n            if (g[i][j] == 'H') {\n                ex = i;\n                ey = j;\n            }\n        }\n    }\n    \n    memset(dist, -1, sizeof(dist));\n    \n    queue<PII> q;\n    q.push({sx, sy});\n    dist[sx][sy] = 0;\n    \n    while (!q.empty()) {\n        auto [x, y] = q.front();\n        q.pop();\n        \n        // 到达终点\n        if (x == ex && y == ey) {\n            cout << dist[x][y] << endl;\n            return 0;\n        }\n        \n        for (int i = 0; i < 8; i++) {\n            int nx = x + dx[i];\n            int ny = y + dy[i];\n            \n            if (nx < 0 || nx >= row || ny < 0 || ny >= col) continue;\n            if (dist[nx][ny] != -1) continue;\n            if (g[nx][ny] == '*') continue;\n            \n            dist[nx][ny] = dist[x][y] + 1;\n            q.push({nx, ny});\n        }\n    }\n    \n    // 如果没有找到路径\n    cout << -1 << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK55",
+          "code": "LinK55",
+          "file": "LinK55.cpp",
+          "title": "公主的攻击范围",
+          "language": "C++",
+          "lineCount": 53,
+          "source": "/*\n * LinK55: 公主的攻击范围\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 1010;\nint dista[N][N];\nint dx[4] = {-1, 1, 0, 0};\nint dy[4] = {0, 0, -1, 1};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m;\n    cin >> n >> m;\n    queue<pair<int, int>> q;\n    memset(dista, -1, sizeof(dista));\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < m; j++) {\n            char ch;\n            cin >> ch;\n            if (ch == '1') {\n                dista[i][j] = 0;\n                q.push({i, j});\n            }\n        }\n    }\n\n    while (!q.empty()) {\n        pair<int, int> cur = q.front();\n        q.pop();\n        int x = cur.first, y = cur.second;\n        for (int k = 0; k < 4; k++) {\n            int nx = x + dx[k], ny = y + dy[k];\n            if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;\n            if (dista[nx][ny] != -1) continue;\n            dista[nx][ny] = dista[x][y] + 1;\n            q.push({nx, ny});\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < m; j++) {\n            cout << dista[i][j] << ' ';\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK56",
+          "code": "LinK56",
+          "file": "LinK56.cpp",
+          "title": "滚石柱",
+          "language": "C++",
+          "lineCount": 99,
+          "source": "/*\n * LinK56: 滚石柱\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 505;\nchar g[N][N];\nint dista[N][N][3];\nint n, m;\n\nstruct State {\n    int x, y, lie;\n};\n\nint dx[3][4] = {\n    {-2, 0, 1, 0},\n    {-1, 0, 1, 0},\n    {-1, 0, 2, 0}\n};\nint dy[3][4] = {\n    {0, 1, 0, -2},\n    {0, 2, 0, -1},\n    {0, 1, 0, -1}\n};\nint nextLie[3][4] = {\n    {2, 1, 2, 1},\n    {1, 0, 1, 0},\n    {0, 2, 0, 2}\n};\n\nbool cell_ok(int x, int y) {\n    return x >= 0 && x < n && y >= 0 && y < m && g[x][y] != '#';\n}\n\nbool state_ok(const State &s) {\n    int x = s.x, y = s.y;\n    if (!cell_ok(x, y)) return false;\n    if (s.lie == 0) return g[x][y] != 'E';\n    if (s.lie == 1) return cell_ok(x, y + 1);\n    return cell_ok(x + 1, y);\n}\n\nint bfs(State start, int ex, int ey) {\n    memset(dista, -1, sizeof(dista));\n    queue<State> q;\n    q.push(start);\n    dista[start.x][start.y][start.lie] = 0;\n\n    while (!q.empty()) {\n        State u = q.front();\n        q.pop();\n        int step = dista[u.x][u.y][u.lie];\n        if (u.lie == 0 && u.x == ex && u.y == ey) return step;\n\n        for (int d = 0; d < 4; d++) {\n            State v{u.x + dx[u.lie][d], u.y + dy[u.lie][d], nextLie[u.lie][d]};\n            if (!state_ok(v)) continue;\n            if (dista[v.x][v.y][v.lie] != -1) continue;\n            dista[v.x][v.y][v.lie] = step + 1;\n            q.push(v);\n        }\n    }\n    return -1;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    while (cin >> n >> m, n || m) {\n        vector<pair<int, int>> xs;\n        int ex = -1, ey = -1;\n        for (int i = 0; i < n; i++) {\n            cin >> g[i];\n            for (int j = 0; j < m; j++) {\n                if (g[i][j] == 'X') xs.push_back({i, j});\n                if (g[i][j] == 'O') ex = i, ey = j;\n            }\n        }\n\n        State start{xs[0].first, xs[0].second, 0};\n        if (xs.size() == 2) {\n            sort(xs.begin(), xs.end());\n            if (xs[0].first == xs[1].first) {\n                start = {xs[0].first, min(xs[0].second, xs[1].second), 1};\n            } else {\n                start = {min(xs[0].first, xs[1].first), xs[0].second, 2};\n            }\n        }\n\n        int ans = bfs(start, ex, ey);\n        if (ans == -1) cout << \"Impossible\\n\";\n        else cout << ans << '\\n';\n    }\n\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK57",
+          "code": "LinK57",
+          "file": "LinK57.cpp",
+          "title": "Dijkstra求最短路(1)",
+          "language": "C++",
+          "lineCount": 69,
+          "source": "/*\n * LinK57: Dijkstra求最短路(1)\n */\n\n#include <iostream>\n#include <cstring>\n#include <queue>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nconst int N = 150010, M = 150010;\nint h[N], e[M], w[M], ne[M], idx;\nint dist[N];\nbool st[N];\nint n, m;\n\n// 添加一条边 a->b，权重为c\nvoid add(int a, int b, int c) {\n    e[idx] = b;\n    w[idx] = c;\n    ne[idx] = h[a];\n    h[a] = idx++;\n}\n\nint dijkstra() {\n    memset(dist, 0x3f, sizeof(dist));\n    dist[1] = 0;\n    \n    // 小根堆：{距离, 节点编号}\n    priority_queue<PII, vector<PII>, greater<PII>> heap;\n    heap.push({0, 1});\n    \n    while (!heap.empty()) {\n        auto [d, ver] = heap.top();\n        heap.pop();\n        \n        if (st[ver]) continue;\n        st[ver] = true;\n        \n        // 遍历所有邻边\n        for (int i = h[ver]; i != -1; i = ne[i]) {\n            int j = e[i];\n            if (dist[j] > d + w[i]) {\n                dist[j] = d + w[i];\n                heap.push({dist[j], j});\n            }\n        }\n    }\n    \n    if (dist[n] == 0x3f3f3f3f) return -1;\n    return dist[n];\n}\n\nint main() {\n    cin >> n >> m;\n    \n    memset(h, -1, sizeof(h));\n    \n    while (m--) {\n        int a, b, c;\n        cin >> a >> b >> c;\n        add(a, b, c);  // 有向图\n    }\n    \n    cout << dijkstra() << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK58",
+          "code": "LinK58",
+          "file": "LinK58.cpp",
+          "title": "Dijkstra求最短路(2)",
+          "language": "C++",
+          "lineCount": 69,
+          "source": "/*\n * LinK58: Dijkstra求最短路(2)\n */\n\n#include <iostream>\n#include <cstring>\n#include <queue>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nconst int N = 150010, M = 150010;\nint h[N], e[M], w[M], ne[M], idx;\nint dist[N];\nbool st[N];\nint n, m;\n\n// 添加一条边 a->b，权重为c\nvoid add(int a, int b, int c) {\n    e[idx] = b;\n    w[idx] = c;\n    ne[idx] = h[a];\n    h[a] = idx++;\n}\n\nint dijkstra() {\n    memset(dist, 0x3f, sizeof(dist));\n    dist[1] = 0;\n    \n    // 小根堆：{距离, 节点编号}\n    priority_queue<PII, vector<PII>, greater<PII>> heap;\n    heap.push({0, 1});\n    \n    while (!heap.empty()) {\n        auto [d, ver] = heap.top();\n        heap.pop();\n        \n        if (st[ver]) continue;\n        st[ver] = true;\n        \n        // 遍历所有邻边\n        for (int i = h[ver]; i != -1; i = ne[i]) {\n            int j = e[i];\n            if (dist[j] > d + w[i]) {\n                dist[j] = d + w[i];\n                heap.push({dist[j], j});\n            }\n        }\n    }\n    \n    if (dist[n] == 0x3f3f3f3f) return -1;\n    return dist[n];\n}\n\nint main() {\n    cin >> n >> m;\n    \n    memset(h, -1, sizeof(h));\n    \n    while (m--) {\n        int a, b, c;\n        cin >> a >> b >> c;\n        add(a, b, c);  // 有向图\n    }\n    \n    cout << dijkstra() << endl;\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK59",
+          "code": "LinK59",
+          "file": "LinK59.cpp",
+          "title": "维修电路",
+          "language": "C++",
+          "lineCount": 100,
+          "source": "/*\n * LinK59: 维修电路\n */\n\n#include <iostream>\n#include <cstring>\n#include <deque>\nusing namespace std;\n\ntypedef pair<int, int> PII;\n\nconst int N = 510;\nchar g[N][N];\nint dist[N][N];\nint R, C;\n\n// 格点坐标 (i,j) 到相邻格点的方向\n// 四个方向：左上、右上、右下、左下\nint dx[] = {-1, -1, 1, 1};\nint dy[] = {-1, 1, 1, -1};\n\n// 从格点(i,j)到相邻格点需要经过的格子坐标\nint ix[] = {-1, -1, 0, 0};\nint iy[] = {-1, 0, 0, -1};\n\n// 四种走法对应的期望字符\n// 左上: \\  右上: /  右下: \\  左下: /\nchar expect[] = {'\\\\', '/', '\\\\', '/'};\n\nint bfs() {\n    memset(dist, 0x3f, sizeof(dist));\n    deque<PII> q;\n    \n    dist[0][0] = 0;\n    q.push_front({0, 0});\n    \n    while (!q.empty()) {\n        auto [x, y] = q.front();\n        q.pop_front();\n        \n        // 到达右下角\n        if (x == R && y == C) {\n            return dist[x][y];\n        }\n        \n        for (int i = 0; i < 4; i++) {\n            int nx = x + dx[i];\n            int ny = y + dy[i];\n            \n            if (nx < 0 || nx > R || ny < 0 || ny > C) continue;\n            \n            // 经过的格子坐标\n            int gx = x + ix[i];\n            int gy = y + iy[i];\n            \n            // 判断是否需要旋转\n            int w = (g[gx][gy] != expect[i]);\n            int nd = dist[x][y] + w;\n            \n            if (nd < dist[nx][ny]) {\n                dist[nx][ny] = nd;\n                if (w == 0) {\n                    q.push_front({nx, ny});  // 不旋转，优先\n                } else {\n                    q.push_back({nx, ny});   // 旋转，放后面\n                }\n            }\n        }\n    }\n    \n    return -1;  // 无解\n}\n\nint main() {\n    int T;\n    cin >> T;\n    \n    while (T--) {\n        cin >> R >> C;\n        \n        for (int i = 0; i < R; i++) {\n            cin >> g[i];\n        }\n        \n        // 如果R+C为奇数，不可能到达\n        if ((R + C) % 2 != 0) {\n            cout << \"NO SOLUTION\" << endl;\n            continue;\n        }\n        \n        int ans = bfs();\n        if (ans == -1) {\n            cout << \"NO SOLUTION\" << endl;\n        } else {\n            cout << ans << endl;\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK60",
+          "code": "LinK60",
+          "file": "LinK60.cpp",
+          "title": "突袭路线",
+          "language": "C++",
+          "lineCount": 74,
+          "source": "/*\n * LinK60: 突袭路线\n */\n\n#include <iostream>\n#include <cstring>\n#include <queue>\nusing namespace std;\n\nconst int N = 100010, M = 100010;\nint h[N], e[M], ne[M], idx;\nint in[N];  // 入度\nint n, m;\n\nvoid add(int a, int b) {\n    e[idx] = b;\n    ne[idx] = h[a];\n    h[a] = idx++;\n    in[b]++;  // b的入度+1\n}\n\nvoid topsort() {\n    queue<int> q;\n    vector<int> res;\n    \n    // 将所有入度为0的点入队\n    for (int i = 1; i <= n; i++) {\n        if (in[i] == 0) {\n            q.push(i);\n        }\n    }\n    \n    while (!q.empty()) {\n        int t = q.front();\n        q.pop();\n        res.push_back(t);\n        \n        // 遍历所有邻边\n        for (int i = h[t]; i != -1; i = ne[i]) {\n            int j = e[i];\n            in[j]--;\n            if (in[j] == 0) {\n                q.push(j);\n            }\n        }\n    }\n    \n    // 如果res中包含了所有n个点，则有拓扑序列\n    if (res.size() == n) {\n        for (int i = 0; i < n; i++) {\n            if (i > 0) cout << \" \";\n            cout << res[i];\n        }\n        cout << endl;\n    } else {\n        cout << -1 << endl;\n    }\n}\n\nint main() {\n    cin >> n >> m;\n    \n    memset(h, -1, sizeof(h));\n    \n    while (m--) {\n        int a, b;\n        cin >> a >> b;\n        add(a, b);\n    }\n    \n    topsort();\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK61",
+          "code": "LinK61",
+          "file": "LinK61.cpp",
+          "title": "最省赛程",
+          "language": "C++",
+          "lineCount": 112,
+          "source": "/*\n * LinK61: 最省赛程\n */\n\n#include <iostream>\n#include <cstring>\n#include <queue>\n#include <vector>\nusing namespace std;\n\nconst int N = 1010, M = 20010, C = 110;\nint h[N], e[M], w[M], ne[M], idx;\nint price[N];  // 每个城市的油价\nint dist[N][C];  // dist[i][j] 到达城市i剩余油量j的最小花费\nbool st[N][C];\nint n, m, q;\n\nstruct State {\n    int city, fuel, cost;\n    bool operator>(const State &other) const {\n        return cost > other.cost;\n    }\n};\n\nvoid add(int a, int b, int c) {\n    e[idx] = b;\n    w[idx] = c;\n    ne[idx] = h[a];\n    h[a] = idx++;\n}\n\nint dijkstra(int cap, int start, int end) {\n    memset(dist, 0x3f, sizeof(dist));\n    memset(st, 0, sizeof(st));\n    \n    priority_queue<State, vector<State>, greater<State>> heap;\n    \n    // 起点：油箱为空，花费0\n    dist[start][0] = 0;\n    heap.push({start, 0, 0});\n    \n    while (!heap.empty()) {\n        State t = heap.top();\n        heap.pop();\n        \n        int city = t.city, fuel = t.fuel, cost = t.cost;\n        \n        if (city == end) return cost;  // 到达终点\n        \n        if (st[city][fuel]) continue;\n        st[city][fuel] = true;\n        \n        // 操作1：在当前城市加1单位油（如果没满）\n        if (fuel < cap) {\n            int nf = fuel + 1;\n            int nc = cost + price[city];\n            if (nc < dist[city][nf]) {\n                dist[city][nf] = nc;\n                heap.push({city, nf, nc});\n            }\n        }\n        \n        // 操作2：开车到相邻城市\n        for (int i = h[city]; i != -1; i = ne[i]) {\n            int next = e[i];\n            int need = w[i];\n            \n            if (fuel >= need) {\n                int nf = fuel - need;\n                if (cost < dist[next][nf]) {\n                    dist[next][nf] = cost;\n                    heap.push({next, nf, cost});\n                }\n            }\n        }\n    }\n    \n    return -1;  // 无法到达\n}\n\nint main() {\n    cin >> n >> m;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> price[i];\n    }\n    \n    memset(h, -1, sizeof(h));\n    \n    while (m--) {\n        int a, b, c;\n        cin >> a >> b >> c;\n        add(a, b, c);\n        add(b, a, c);  // 无向图\n    }\n    \n    cin >> q;\n    \n    while (q--) {\n        int C, S, E;\n        cin >> C >> S >> E;\n        \n        int ans = dijkstra(C, S, E);\n        if (ans == -1) {\n            cout << \"impossible\" << endl;\n        } else {\n            cout << ans << endl;\n        }\n    }\n    \n    return 0;\n}\n",
           "meta": {
             "timeLimit": "",
             "memoryLimit": "",
