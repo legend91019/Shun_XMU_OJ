@@ -433,6 +433,53 @@ h1 {
   font-size: 18px;
 }
 
+.solution-notes {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.8fr);
+  gap: 12px;
+}
+
+.solution-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  min-height: 118px;
+  padding: 18px 18px 18px 22px;
+  border: 1px solid color-mix(in srgb, var(--accent) 36%, var(--line));
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),
+    var(--panel-strong);
+  box-shadow: 0 12px 32px rgba(44, 37, 25, 0.1);
+}
+
+.solution-card.is-summary {
+  border-color: color-mix(in srgb, var(--accent-2) 36%, var(--line));
+  border-left-color: var(--accent-2);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 72%),
+    var(--panel-strong);
+}
+
+.solution-label {
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--panel);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.solution-card p {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.8;
+}
+
 .statement dl {
   display: grid;
   gap: 10px;
@@ -601,7 +648,8 @@ mark {
   }
 
   .stats,
-  .bank-grid {
+  .bank-grid,
+  .solution-notes {
     grid-template-columns: 1fr;
   }
 

@@ -268,8 +268,6 @@ function metaItems(problem) {
 function statementBlock(problem) {
   const meta = problem.meta ?? {};
   const rows = [
-    ["思路", meta.idea],
-    ["总结", meta.summary],
     ["来源", meta.source],
     ["题意", meta.description],
     ["输入", meta.input],
@@ -297,6 +295,32 @@ function statementBlock(problem) {
           )
           .join("")}
       </dl>
+    </section>
+  `;
+}
+
+function solutionNotes(problem) {
+  const meta = problem.meta ?? {};
+  if (!meta.idea && !meta.summary) return "";
+
+  return `
+    <section class="solution-notes" aria-label="思路和总结">
+      ${
+        meta.idea
+          ? `<article class="solution-card is-idea">
+              <span class="solution-label">思路</span>
+              <p>${escapeHtml(decodeEntities(meta.idea))}</p>
+            </article>`
+          : ""
+      }
+      ${
+        meta.summary
+          ? `<article class="solution-card is-summary">
+              <span class="solution-label">总结</span>
+              <p>${escapeHtml(decodeEntities(meta.summary))}</p>
+            </article>`
+          : ""
+      }
     </section>
   `;
 }
@@ -379,6 +403,7 @@ function renderProblem() {
         </div>
         <div class="meta-row">${metaItems(problem)}</div>
       </header>
+      ${solutionNotes(problem)}
       ${statementBlock(problem)}
       ${codePanel(problem)}
       ${

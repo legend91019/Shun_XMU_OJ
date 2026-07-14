@@ -203,7 +203,10 @@ def clone_for_final_exam(problem: dict) -> dict:
     cloned["id"] = f"final_exam-{cloned['code']}"
     idea, summary = FINAL_EXAM_NOTES[cloned["code"]]
     cloned.setdefault("meta", {})
-    cloned["meta"]["idea"] = idea
+    cloned["meta"]["idea"] = (
+        f"{idea} 解题时先把输入数据按题目顺序读完整，再把核心公式、判断条件或循环过程单独写清楚，"
+        "最后对照样例检查输出格式和小数位。"
+    )
     cloned["meta"]["summary"] = summary
     return cloned
 
