@@ -68,7 +68,7 @@ async function copyText(text, label = "代码") {
       document.execCommand("copy");
       area.remove();
     }
-    showToast(`${label}已复制`);
+    showToast(`${label} 已复制`);
   } catch {
     showToast("复制失败，请手动选中代码");
   }
@@ -268,6 +268,8 @@ function metaItems(problem) {
 function statementBlock(problem) {
   const meta = problem.meta ?? {};
   const rows = [
+    ["思路", meta.idea],
+    ["总结", meta.summary],
     ["来源", meta.source],
     ["题意", meta.description],
     ["输入", meta.input],
@@ -282,7 +284,7 @@ function statementBlock(problem) {
 
   return `
     <section class="statement">
-      <h2>题面速览</h2>
+      <h2>题解速览</h2>
       <dl>
         ${rows
           .map(
@@ -317,19 +319,18 @@ function codePanel(problem, title = "参考代码") {
 }
 
 function renderHome() {
-  const jd = getBank("jiandao");
-  const ex = getBank("examples");
   app.innerHTML = `
     <section class="hero">
       <div class="hero-title">
         <span class="eyebrow">XMUOJ ARCHIVE · ${escapeHtml(DATA.author)}</span>
-        <h1>剑道试炼与例题，一站式复制提交。</h1>
-        <p class="lead">参考同学题解站的题库组织方式，升级成更适合刷题的工作台：左侧快速定位，右侧直接看题意、样例和高亮代码，每份代码都能一键复制。</p>
+        <h1>剑道试炼、期末检验与例题，一站式复制提交。</h1>
+        <p class="lead">参考同学题解站的题库组织方式，升级成更适合刷题的工作台：左侧快速定位，右侧直接看题意、思路、总结、样例和高亮代码，每份代码都能一键复制。</p>
       </div>
       <div class="stats">
         <div class="stat"><strong>${totalProblems()}</strong><span>已整理题目</span></div>
-        <div class="stat"><strong>${jd.problems.length}</strong><span>剑道试炼</span></div>
-        <div class="stat"><strong>${ex.problems.length}</strong><span>李胜睿例题</span></div>
+        ${DATA.banks
+          .map((bank) => `<div class="stat"><strong>${bank.problems.length}</strong><span>${escapeHtml(bank.shortName)}</span></div>`)
+          .join("")}
         <div class="stat"><strong>${totalLines()}</strong><span>代码总行数</span></div>
       </div>
       <div class="bank-grid">
