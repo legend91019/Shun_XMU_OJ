@@ -2573,6 +2573,518 @@ window.XMUOJ_SITE_DATA = {
             "output": "",
             "samples": ""
           }
+        },
+        {
+          "id": "jiandao-JD141",
+          "code": "JD141",
+          "file": "JD141.cpp",
+          "title": "雾中排阵",
+          "language": "C++",
+          "lineCount": 33,
+          "source": "/*\n * JD141: 雾中排阵\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint n;\nvector<int> path, used;\n\nvoid dfs() {\n    if ((int)path.size() == n) {\n        for (int i = 0; i < n; i++) cout << path[i] << ' ';\n        cout << '\\n';\n        return;\n    }\n    for (int i = 1; i <= n; i++) {\n        if (!used[i]) {\n            used[i] = 1;\n            path.push_back(i);\n            dfs();\n            path.pop_back();\n            used[i] = 0;\n        }\n    }\n}\n\nint main() {\n    cin >> n;\n    used.assign(n + 1, 0);\n    dfs();\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD142",
+          "code": "JD142",
+          "file": "JD142.cpp",
+          "title": "棋盘布后",
+          "language": "C++",
+          "lineCount": 37,
+          "source": "/*\n * JD142: 棋盘布后\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint n;\nvector<string> board;\nvector<int> col, dg, udg;\n\nvoid dfs(int r) {\n    if (r == n) {\n        for (auto &s : board) cout << s << '\\n';\n        cout << '\\n';\n        return;\n    }\n    for (int c = 0; c < n; c++) {\n        if (!col[c] && !dg[r + c] && !udg[r - c + n]) {\n            board[r][c] = 'Q';\n            col[c] = dg[r + c] = udg[r - c + n] = 1;\n            dfs(r + 1);\n            col[c] = dg[r + c] = udg[r - c + n] = 0;\n            board[r][c] = '.';\n        }\n    }\n}\n\nint main() {\n    cin >> n;\n    board.assign(n, string(n, '.'));\n    col.assign(n, 0);\n    dg.assign(2 * n, 0);\n    udg.assign(2 * n, 0);\n    dfs(0);\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD143",
+          "code": "JD143",
+          "file": "JD143.cpp",
+          "title": "迷宫寻路",
+          "language": "C++",
+          "lineCount": 30,
+          "source": "/*\n * JD143: 迷宫寻路\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> g(n, vector<int>(m)), d(n, vector<int>(m, -1));\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < m; j++) cin >> g[i][j];\n    queue<pair<int, int>> q;\n    q.push({0, 0});\n    d[0][0] = 0;\n    int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};\n    while (!q.empty()) {\n        auto cur = q.front();\n        q.pop();\n        for (int k = 0; k < 4; k++) {\n            int x = cur.first + dx[k], y = cur.second + dy[k];\n            if (x < 0 || x >= n || y < 0 || y >= m || g[x][y] || d[x][y] != -1) continue;\n            d[x][y] = d[cur.first][cur.second] + 1;\n            q.push({x, y});\n        }\n    }\n    cout << d[n - 1][m - 1] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD144",
+          "code": "JD144",
+          "file": "JD144.cpp",
+          "title": "八码迷局",
+          "language": "C++",
+          "lineCount": 44,
+          "source": "/*\n * JD144: 八码迷局\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint bfs(string start, string target) {\n    unordered_map<string, int> dist;\n    queue<string> q;\n    q.push(start);\n    dist[start] = 0;\n    int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};\n    while (!q.empty()) {\n        string s = q.front();\n        q.pop();\n        if (s == target) return dist[s];\n        int p = s.find('x');\n        int x = p / 3, y = p % 3;\n        for (int k = 0; k < 4; k++) {\n            int nx = x + dx[k], ny = y + dy[k];\n            if (nx < 0 || nx >= 3 || ny < 0 || ny >= 3) continue;\n            string t = s;\n            swap(t[p], t[nx * 3 + ny]);\n            if (!dist.count(t)) {\n                dist[t] = dist[s] + 1;\n                q.push(t);\n            }\n        }\n    }\n    return -1;\n}\n\nint main() {\n    vector<char> chars;\n    char ch;\n    while (cin >> ch) chars.push_back(ch);\n    string a, b;\n    for (int i = 0; i < 9 && i < (int)chars.size(); i++) a += chars[i];\n    for (int i = 9; i < 18 && i < (int)chars.size(); i++) b += chars[i];\n    if (b.empty()) b = \"12345678x\";\n    cout << bfs(a, b) << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD145",
+          "code": "JD145",
+          "file": "JD145.cpp",
+          "title": "古树重心",
+          "language": "C++",
+          "lineCount": 69,
+          "source": "/*\n * JD145: 古树重心\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    cin >> n;\n    vector<pair<int, int>> edges;\n    edges.reserve(max(0, n - 1));\n    int max_id = n;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        cin >> a >> b;\n        edges.push_back({a, b});\n        max_id = max(max_id, max(a, b));\n    }\n\n    vector<int> head(max_id + 1, -1), to(max(1, 2 * (n - 1))), nxt(max(1, 2 * (n - 1)));\n    int idx = 0;\n    auto add = [&](int a, int b) {\n        to[idx] = b;\n        nxt[idx] = head[a];\n        head[a] = idx++;\n    };\n    for (auto e : edges) {\n        add(e.first, e.second);\n        add(e.second, e.first);\n    }\n\n    vector<int> parent(max_id + 1), order;\n    order.reserve(n);\n    stack<int> st;\n    st.push(1);\n    parent[1] = -1;\n    while (!st.empty()) {\n        int u = st.top();\n        st.pop();\n        order.push_back(u);\n        for (int i = head[u]; i != -1; i = nxt[i]) {\n            int v = to[i];\n            if (v == parent[u] || parent[v]) continue;\n            parent[v] = u;\n            st.push(v);\n        }\n    }\n\n    vector<int> sz(max_id + 1, 1);\n    int ans = n;\n    for (int i = (int)order.size() - 1; i >= 0; i--) {\n        int u = order[i], mx = 0;\n        for (int j = head[u]; j != -1; j = nxt[j]) {\n            int v = to[j];\n            if (parent[v] == u) {\n                sz[u] += sz[v];\n                mx = max(mx, sz[v]);\n            }\n        }\n        mx = max(mx, n - sz[u]);\n        ans = min(ans, mx);\n    }\n    cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD146",
+          "code": "JD146",
+          "file": "JD146.cpp",
+          "title": "城池层递",
+          "language": "C++",
+          "lineCount": 41,
+          "source": "/*\n * JD146: 城池层递\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m;\n    cin >> n >> m;\n    vector<pair<int, int>> edges;\n    edges.reserve(m);\n    int max_id = n;\n    for (int i = 0; i < m; i++) {\n        int a, b;\n        cin >> a >> b;\n        edges.push_back({a, b});\n        max_id = max(max_id, max(a, b));\n    }\n    vector<vector<int>> g(max_id + 1);\n    for (auto [a, b] : edges) g[a].push_back(b);\n    vector<int> d(max_id + 1, -1);\n    queue<int> q;\n    q.push(1);\n    d[1] = 0;\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : g[u]) {\n            if (d[v] == -1) {\n                d[v] = d[u] + 1;\n                q.push(v);\n            }\n        }\n    }\n    cout << d[n] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD147",
+          "code": "JD147",
+          "file": "JD147.cpp",
+          "title": "拓扑之序",
+          "language": "C++",
+          "lineCount": 37,
+          "source": "/*\n * JD147: 拓扑之序\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> g(n + 1);\n    vector<int> indeg(n + 1);\n    for (int i = 0; i < m; i++) {\n        int a, b;\n        cin >> a >> b;\n        g[a].push_back(b);\n        indeg[b]++;\n    }\n    queue<int> q;\n    for (int i = 1; i <= n; i++) if (!indeg[i]) q.push(i);\n    vector<int> order;\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        order.push_back(u);\n        for (int v : g[u]) if (--indeg[v] == 0) q.push(v);\n    }\n    if ((int)order.size() != n) cout << -1 << '\\n';\n    else {\n        for (int i = 0; i < n; i++) {\n            if (i) cout << ' ';\n            cout << order[i];\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD148",
+          "code": "JD148",
+          "file": "JD148.cpp",
+          "title": "近者先行",
+          "language": "C++",
+          "lineCount": 48,
+          "source": "/*\n * JD148: 近者先行\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<tuple<int, int, int>> edges;\n    edges.reserve(m);\n    int max_id = n;\n    for (int i = 0; i < m; i++) {\n        int a, b, w;\n        cin >> a >> b >> w;\n        edges.push_back(make_tuple(a, b, w));\n        max_id = max(max_id, max(a, b));\n    }\n    vector<vector<pair<int, int>>> g(max_id + 1);\n    for (auto &e : edges) {\n        int a, b, w;\n        tie(a, b, w) = e;\n        g[a].push_back({b, w});\n    }\n    const long long INF = 4e18;\n    vector<long long> dist(max_id + 1, INF);\n    vector<int> vis(max_id + 1);\n    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> heap;\n    dist[1] = 0;\n    heap.push({0, 1});\n    while (!heap.empty()) {\n        long long d = heap.top().first;\n        int u = heap.top().second;\n        heap.pop();\n        if (vis[u]) continue;\n        vis[u] = 1;\n        for (auto e : g[u]) {\n            int v = e.first, w = e.second;\n            if (dist[v] > d + w) {\n                dist[v] = d + w;\n                heap.push({dist[v], v});\n            }\n        }\n    }\n    cout << (dist[n] == INF ? -1 : dist[n]) << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD149",
+          "code": "JD149",
+          "file": "JD149.cpp",
+          "title": "堆中取近",
+          "language": "C++",
+          "lineCount": 48,
+          "source": "/*\n * JD149: 堆中取近\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<tuple<int, int, int>> edges;\n    edges.reserve(m);\n    int max_id = n;\n    for (int i = 0; i < m; i++) {\n        int a, b, w;\n        cin >> a >> b >> w;\n        edges.push_back(make_tuple(a, b, w));\n        max_id = max(max_id, max(a, b));\n    }\n    vector<vector<pair<int, int>>> g(max_id + 1);\n    for (auto &e : edges) {\n        int a, b, w;\n        tie(a, b, w) = e;\n        g[a].push_back({b, w});\n    }\n    const long long INF = 4e18;\n    vector<long long> dist(max_id + 1, INF);\n    vector<int> vis(max_id + 1);\n    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> heap;\n    dist[1] = 0;\n    heap.push({0, 1});\n    while (!heap.empty()) {\n        auto cur = heap.top();\n        heap.pop();\n        int u = cur.second;\n        if (vis[u]) continue;\n        vis[u] = 1;\n        for (auto e : g[u]) {\n            int v = e.first, w = e.second;\n            if (dist[v] > dist[u] + w) {\n                dist[v] = dist[u] + w;\n                heap.push({dist[v], v});\n            }\n        }\n    }\n    cout << (dist[n] == INF ? -1 : dist[n]) << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD150",
+          "code": "JD150",
+          "file": "JD150.cpp",
+          "title": "队中松弛",
+          "language": "C++",
+          "lineCount": 48,
+          "source": "/*\n * JD150: 队中松弛\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<tuple<int, int, int>> edges;\n    edges.reserve(m);\n    int max_id = n;\n    for (int i = 0; i < m; i++) {\n        int a, b, w;\n        cin >> a >> b >> w;\n        edges.push_back(make_tuple(a, b, w));\n        max_id = max(max_id, max(a, b));\n    }\n    vector<vector<pair<int, int>>> g(max_id + 1);\n    for (auto &e : edges) {\n        int a, b, w;\n        tie(a, b, w) = e;\n        g[a].push_back({b, w});\n    }\n    const long long INF = 4e18;\n    vector<long long> dist(max_id + 1, INF);\n    vector<int> inq(max_id + 1);\n    queue<int> q;\n    dist[1] = 0;\n    q.push(1);\n    inq[1] = 1;\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        inq[u] = 0;\n        for (auto e : g[u]) {\n            int v = e.first, w = e.second;\n            if (dist[v] > dist[u] + w) {\n                dist[v] = dist[u] + w;\n                if (!inq[v]) q.push(v), inq[v] = 1;\n            }\n        }\n    }\n    if (dist[n] == INF) cout << \"impossible\\n\";\n    else cout << dist[n] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD151",
+          "code": "JD151",
+          "file": "JD151.cpp",
+          "title": "万径归一",
+          "language": "C++",
+          "lineCount": 30,
+          "source": "/*\n * JD151: 万径归一\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m, q;\n    cin >> n >> m >> q;\n    const int INF = 1e9;\n    vector<vector<int>> d(n + 1, vector<int>(n + 1, INF));\n    for (int i = 1; i <= n; i++) d[i][i] = 0;\n    for (int i = 0; i < m; i++) {\n        int a, b, w;\n        cin >> a >> b >> w;\n        d[a][b] = min(d[a][b], w);\n    }\n    for (int k = 1; k <= n; k++)\n        for (int i = 1; i <= n; i++)\n            for (int j = 1; j <= n; j++)\n                d[i][j] = min(d[i][j], d[i][k] + d[k][j]);\n    while (q--) {\n        int a, b;\n        cin >> a >> b;\n        if (d[a][b] > INF / 2) cout << \"impossible\\n\";\n        else cout << d[a][b] << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD152",
+          "code": "JD152",
+          "file": "JD152.cpp",
+          "title": "蔓延成网",
+          "language": "C++",
+          "lineCount": 46,
+          "source": "/*\n * JD152: 蔓延成网\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    struct Edge {\n        int a, b, w;\n        bool operator<(const Edge &other) const { return w < other.w; }\n    };\n    vector<Edge> edges(m);\n    for (int i = 0; i < m; i++) {\n        cin >> edges[i].a >> edges[i].b >> edges[i].w;\n    }\n    sort(edges.begin(), edges.end());\n    vector<int> parent(n + 1), sz(n + 1, 1);\n    iota(parent.begin(), parent.end(), 0);\n    auto find_root = [&](int x) {\n        int r = x;\n        while (parent[r] != r) r = parent[r];\n        while (parent[x] != x) {\n            int p = parent[x];\n            parent[x] = r;\n            x = p;\n        }\n        return r;\n    };\n    long long ans = 0;\n    int cnt = 0;\n    for (auto &e : edges) {\n        int a = find_root(e.a), b = find_root(e.b);\n        if (a == b) continue;\n        if (sz[a] < sz[b]) swap(a, b);\n        parent[b] = a;\n        sz[a] += sz[b];\n        ans += e.w;\n        cnt++;\n    }\n    if (cnt < n - 1) cout << \"impossible\\n\";\n    else cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD153",
+          "code": "JD153",
+          "file": "JD153.cpp",
+          "title": "逐边成林",
+          "language": "C++",
+          "lineCount": 49,
+          "source": "/*\n * JD153: 逐边成林\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int a, b, w;\n    bool operator<(const Edge &other) const { return w < other.w; }\n};\n\nint find_root(vector<int> &p, int x) {\n    int r = x;\n    while (p[r] != r) r = p[r];\n    while (p[x] != x) {\n        int parent = p[x];\n        p[x] = r;\n        x = parent;\n    }\n    return r;\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<Edge> edges(m);\n    for (auto &e : edges) {\n        cin >> e.a >> e.b >> e.w;\n    }\n    sort(edges.begin(), edges.end());\n    vector<int> p(n + 1), sz(n + 1, 1);\n    iota(p.begin(), p.end(), 0);\n    int cnt = 0;\n    long long ans = 0;\n    for (auto &e : edges) {\n        int a = find_root(p, e.a), b = find_root(p, e.b);\n        if (a != b) {\n            if (sz[a] < sz[b]) swap(a, b);\n            p[b] = a;\n            sz[a] += sz[b];\n            ans += e.w;\n            cnt++;\n        }\n    }\n    if (cnt < n - 1) cout << \"impossible\\n\";\n    else cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD154",
+          "code": "JD154",
+          "file": "JD154.cpp",
+          "title": "二色分界",
+          "language": "C++",
+          "lineCount": 46,
+          "source": "/*\n * JD154: 二色分界\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<pair<int, int>> edges;\n    edges.reserve(m);\n    int max_id = n;\n    for (int i = 0; i < m; i++) {\n        int a, b;\n        cin >> a >> b;\n        edges.push_back({a, b});\n        max_id = max(max_id, max(a, b));\n    }\n    vector<vector<int>> g(max_id + 1);\n    for (auto e : edges) {\n        int a = e.first, b = e.second;\n        g[a].push_back(b);\n        g[b].push_back(a);\n    }\n    vector<int> color(max_id + 1, -1);\n    for (int i = 1; i <= max_id; i++) {\n        if (color[i] != -1) continue;\n        queue<int> q;\n        q.push(i);\n        color[i] = 0;\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n            for (int v : g[u]) {\n                if (color[v] == -1) color[v] = color[u] ^ 1, q.push(v);\n                else if (color[v] == color[u]) {\n                    cout << \"No\\n\";\n                    return 0;\n                }\n            }\n        }\n    }\n    cout << \"Yes\\n\";\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD155",
+          "code": "JD155",
+          "file": "JD155.cpp",
+          "title": "一剑一鞘",
+          "language": "C++",
+          "lineCount": 19,
+          "source": "/*\n * JD155: 一剑一鞘\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w;\n        cin >> v >> w;\n        for (int j = V; j >= v; j--) f[j] = max(f[j], f[j - v] + w);\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD156",
+          "code": "JD156",
+          "file": "JD156.cpp",
+          "title": "无穷剑阵",
+          "language": "C++",
+          "lineCount": 19,
+          "source": "/*\n * JD156: 无穷剑阵\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w;\n        cin >> v >> w;\n        for (int j = v; j <= V; j++) f[j] = max(f[j], f[j - v] + w);\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD157",
+          "code": "JD157",
+          "file": "JD157.cpp",
+          "title": "三角登峰",
+          "language": "C++",
+          "lineCount": 22,
+          "source": "/*\n * JD157: 三角登峰\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<vector<long long>> f(n + 2, vector<long long>(n + 2));\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= i; j++) {\n            cin >> f[i][j];\n        }\n    }\n    for (int i = n - 1; i >= 1; i--)\n        for (int j = 1; j <= i; j++)\n            f[i][j] += max(f[i + 1][j], f[i + 1][j + 1]);\n    cout << f[1][1] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD158",
+          "code": "JD158",
+          "file": "JD158.cpp",
+          "title": "递增剑意",
+          "language": "C++",
+          "lineCount": 21,
+          "source": "/*\n * JD158: 递增剑意\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> a(n), f(n, 1);\n    for (int &x : a) cin >> x;\n    int ans = 0;\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < i; j++)\n            if (a[j] < a[i]) f[i] = max(f[i], f[j] + 1);\n        ans = max(ans, f[i]);\n    }\n    cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD159",
+          "code": "JD159",
+          "file": "JD159.cpp",
+          "title": "双谱共鸣",
+          "language": "C++",
+          "lineCount": 26,
+          "source": "/*\n * JD159: 双谱共鸣\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    string a, b;\n    cin >> n >> m;\n    cin.ignore(numeric_limits<streamsize>::max(), '\\n');\n    getline(cin, a);\n    getline(cin, b);\n    vector<int> prev(m + 1), cur(m + 1);\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= m; j++) {\n            cur[j] = max(prev[j], cur[j - 1]);\n            if (a[i - 1] == b[j - 1]) cur[j] = max(cur[j], prev[j - 1] + 1);\n        }\n        swap(prev, cur);\n        fill(cur.begin(), cur.end(), 0);\n    }\n    cout << prev[m] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD160",
+          "code": "JD160",
+          "file": "JD160.cpp",
+          "title": "合石成堆",
+          "language": "C++",
+          "lineCount": 23,
+          "source": "/*\n * JD160: 合石成堆\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> s(n + 1);\n    for (int i = 1; i <= n; i++) cin >> s[i], s[i] += s[i - 1];\n    vector<vector<int>> f(n + 2, vector<int>(n + 2));\n    for (int len = 2; len <= n; len++)\n        for (int l = 1; l + len - 1 <= n; l++) {\n            int r = l + len - 1;\n            f[l][r] = 1e9;\n            for (int k = l; k < r; k++)\n                f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);\n        }\n    cout << f[1][n] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD161",
+          "code": "JD161",
+          "file": "JD161.cpp",
+          "title": "改字成经",
+          "language": "C++",
+          "lineCount": 75,
+          "source": "/*\n * JD161: 改字成经\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint edit_distance(const string &a, const string &b) {\n    int n = a.size(), m = b.size();\n    vector<vector<int>> f(n + 1, vector<int>(m + 1));\n    for (int i = 0; i <= n; i++) f[i][0] = i;\n    for (int j = 0; j <= m; j++) f[0][j] = j;\n    for (int i = 1; i <= n; i++)\n        for (int j = 1; j <= m; j++) {\n            f[i][j] = min(f[i - 1][j], f[i][j - 1]) + 1;\n            f[i][j] = min(f[i][j], f[i - 1][j - 1] + (a[i - 1] != b[j - 1]));\n        }\n    return f[n][m];\n}\n\nint main() {\n    vector<string> tokens;\n    string token;\n    while (cin >> token) tokens.push_back(token);\n    if (tokens.size() < 4) return 0;\n\n    auto is_number = [](const string &s) {\n        return !s.empty() && all_of(s.begin(), s.end(), [](unsigned char c) {\n            return isdigit(c);\n        });\n    };\n\n    if (tokens.size() > 4) {\n        int n = stoi(tokens[0]);\n        int pos, q;\n        if (is_number(tokens[1])) {\n            q = stoi(tokens[1]);\n            pos = 2;\n        } else {\n            pos = 1;\n            q = stoi(tokens[pos + n]);\n        }\n        vector<string> words;\n        for (int i = 0; i < n; i++) words.push_back(tokens[pos + i]);\n        pos += n;\n        if (!is_number(tokens[1])) pos++;\n        for (int i = 0; i < q && pos + 1 < (int)tokens.size(); i++, pos += 2) {\n            string query = tokens[pos];\n            int limit = stoi(tokens[pos + 1]);\n            int cnt = 0;\n            for (auto &word : words) {\n                if (edit_distance(word, query) <= limit) cnt++;\n            }\n            cout << cnt << '\\n';\n        }\n        return 0;\n    }\n\n    int n, m;\n    string a, b;\n    bool second_is_number = is_number(tokens[1]);\n    if (second_is_number) {\n        n = stoi(tokens[0]);\n        m = stoi(tokens[1]);\n        a = tokens[2];\n        b = tokens[3];\n    } else {\n        n = stoi(tokens[0]);\n        a = tokens[1];\n        m = stoi(tokens[2]);\n        b = tokens[3];\n    }\n    cout << edit_distance(a, b) << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD162",
+          "code": "JD162",
+          "file": "JD162.cpp",
+          "title": "雪道寻长",
+          "language": "C++",
+          "lineCount": 35,
+          "source": "/*\n * JD162: 雪道寻长\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint R, C;\nvector<vector<int>> h, memo;\nint dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};\n\nint dp(int x, int y) {\n    int &res = memo[x][y];\n    if (res) return res;\n    res = 1;\n    for (int k = 0; k < 4; k++) {\n        int nx = x + dx[k], ny = y + dy[k];\n        if (nx >= 0 && nx < R && ny >= 0 && ny < C && h[nx][ny] < h[x][y])\n            res = max(res, dp(nx, ny) + 1);\n    }\n    return res;\n}\n\nint main() {\n    cin >> R >> C;\n    h.assign(R, vector<int>(C));\n    memo.assign(R, vector<int>(C));\n    for (int i = 0; i < R; i++)\n        for (int j = 0; j < C; j++) cin >> h[i][j];\n    int ans = 0;\n    for (int i = 0; i < R; i++)\n        for (int j = 0; j < C; j++) ans = max(ans, dp(i, j));\n    cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD163",
+          "code": "JD163",
+          "file": "JD163.cpp",
+          "title": "背包叠甲",
+          "language": "C++",
+          "lineCount": 21,
+          "source": "/*\n * JD163: 背包叠甲\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w, s;\n        cin >> v >> w >> s;\n        for (int k = 0; k < s; k++)\n            for (int j = V; j >= v; j--)\n                f[j] = max(f[j], f[j - v] + w);\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD164",
+          "code": "JD164",
+          "file": "JD164.cpp",
+          "title": "背包限重",
+          "language": "C++",
+          "lineCount": 24,
+          "source": "/*\n * JD164: 背包限重\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w, s;\n        cin >> v >> w >> s;\n        for (int k = 1; s > 0; k <<= 1) {\n            int cnt = min(k, s);\n            s -= cnt;\n            int vv = v * cnt, ww = w * cnt;\n            for (int j = V; j >= vv; j--) f[j] = max(f[j], f[j - vv] + ww);\n        }\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD165",
+          "code": "JD165",
+          "file": "JD165.cpp",
+          "title": "分组选宝",
+          "language": "C++",
+          "lineCount": 25,
+          "source": "/*\n * JD165: 分组选宝\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int s;\n        cin >> s;\n        vector<pair<int, int>> items(s);\n        for (int j = 0; j < s; j++) cin >> items[j].first >> items[j].second;\n        for (int j = V; j >= 0; j--)\n            for (int k = 0; k < s; k++) {\n                int v = items[k].first, w = items[k].second;\n                if (j >= v) f[j] = max(f[j], f[j - v] + w);\n            }\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD166",
+          "code": "JD166",
+          "file": "JD166.cpp",
+          "title": "递增剑意II",
+          "language": "C++",
+          "lineCount": 21,
+          "source": "/*\n * JD166: 递增剑意II\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> q;\n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        auto it = lower_bound(q.begin(), q.end(), x);\n        if (it == q.end()) q.push_back(x);\n        else *it = x;\n    }\n    cout << q.size() << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD167",
+          "code": "JD167",
+          "file": "JD167.cpp",
+          "title": "整分剑法",
+          "language": "C++",
+          "lineCount": 19,
+          "source": "/*\n * JD167: 整分剑法\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    const int MOD = 1000000007;\n    vector<int> f(n + 1);\n    f[0] = 1;\n    for (int i = 1; i <= n; i++)\n        for (int j = i; j <= n; j++)\n            f[j] = (f[j] + f[j - i]) % MOD;\n    cout << f[n] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD168",
+          "code": "JD168",
+          "file": "JD168.cpp",
+          "title": "数码计数",
+          "language": "C++",
+          "lineCount": 42,
+          "source": "/*\n * JD168: 数码计数\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nlong long count_digit(long long n, int x) {\n    if (n <= 0) return 0;\n    long long ans = 0;\n    for (long long i = 1; i <= n; i *= 10) {\n        long long high = n / (i * 10), cur = n / i % 10, low = n % i;\n        if (x) {\n            ans += high * i;\n            if (cur > x) ans += i;\n            else if (cur == x) ans += low + 1;\n        } else {\n            if (high) {\n                ans += (high - 1) * i;\n                if (cur > 0) ans += i;\n                else ans += low + 1;\n            }\n        }\n        if (i > n / 10) break;\n    }\n    return ans;\n}\n\nint main() {\n    long long a, b;\n    while (cin >> a >> b && (a || b)) {\n        if (a > b) swap(a, b);\n        for (int i = 0; i <= 9; i++) {\n            if (i) cout << ' ';\n            long long ans = count_digit(b, i) - count_digit(a - 1, i);\n            if (a == 0 && i == 0) ans++;\n            cout << ans;\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD169",
+          "code": "JD169",
+          "file": "JD169.cpp",
+          "title": "棋盘铺阵",
+          "language": "C++",
+          "lineCount": 36,
+          "source": "/*\n * JD169: 棋盘铺阵\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    while (cin >> n >> m) {\n        if (n == 0 && m == 0) break;\n        vector<int> st;\n        for (int s = 0; s < (1 << n); s++) {\n            int cnt = 0;\n            bool ok = true;\n            for (int i = 0; i < n; i++) {\n                if (s >> i & 1) {\n                    if (cnt & 1) ok = false;\n                    cnt = 0;\n                } else cnt++;\n            }\n            if (cnt & 1) ok = false;\n            if (ok) st.push_back(s);\n        }\n        vector<vector<long long>> f(m + 1, vector<long long>(1 << n));\n        f[0][0] = 1;\n        for (int col = 1; col <= m; col++) {\n            for (int a = 0; a < (1 << n); a++)\n                for (int b = 0; b < (1 << n); b++)\n                    if ((a & b) == 0 && find(st.begin(), st.end(), a | b) != st.end())\n                        f[col][a] += f[col - 1][b];\n        }\n        cout << f[m][0] << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD170",
+          "code": "JD170",
+          "file": "JD170.cpp",
+          "title": "万城巡游",
+          "language": "C++",
+          "lineCount": 25,
+          "source": "/*\n * JD170: 万城巡游\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<vector<int>> w(n, vector<int>(n));\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < n; j++) cin >> w[i][j];\n    const int INF = 1e9;\n    vector<vector<int>> f(1 << n, vector<int>(n, INF));\n    f[1][0] = 0;\n    for (int s = 1; s < (1 << n); s++)\n        for (int j = 0; j < n; j++)\n            if (s >> j & 1)\n                for (int k = 0; k < n; k++)\n                    if ((s ^ (1 << j)) >> k & 1)\n                        f[s][j] = min(f[s][j], f[s ^ (1 << j)][k] + w[k][j]);\n    cout << f[(1 << n) - 1][n - 1] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD171",
+          "code": "JD171",
+          "file": "JD171.cpp",
+          "title": "群经改字",
+          "language": "C++",
+          "lineCount": 41,
+          "source": "/*\n * JD171: 群经改字\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint edit_distance(const string &a, const string &b, int limit) {\n    int n = a.size(), m = b.size();\n    vector<vector<int>> f(n + 1, vector<int>(m + 1));\n    for (int i = 0; i <= n; i++) f[i][0] = i;\n    for (int j = 0; j <= m; j++) f[0][j] = j;\n    for (int i = 1; i <= n; i++) {\n        int rowMin = 1e9;\n        for (int j = 1; j <= m; j++) {\n            f[i][j] = min(f[i - 1][j], f[i][j - 1]) + 1;\n            f[i][j] = min(f[i][j], f[i - 1][j - 1] + (a[i - 1] != b[j - 1]));\n            rowMin = min(rowMin, f[i][j]);\n        }\n        if (rowMin > limit + abs(n - m)) {\n        }\n    }\n    return f[n][m];\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<string> words(n);\n    for (string &s : words) cin >> s;\n    while (m--) {\n        string s;\n        int k;\n        cin >> s >> k;\n        int ans = 0;\n        for (auto &w : words)\n            if (edit_distance(w, s, k) <= k) ans++;\n        cout << ans << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "jiandao-JD172",
+          "code": "JD172",
+          "file": "JD172.cpp",
+          "title": "千机棋局",
+          "language": "C++",
+          "lineCount": 40,
+          "source": "/*\n * JD172: 千机棋局\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nvector<vector<int>> g;\nvector<array<int, 2>> f;\nvector<int> happy, hasParent;\n\nvoid dfs(int u) {\n    f[u][1] = happy[u];\n    for (int v : g[u]) {\n        dfs(v);\n        f[u][0] += max(f[v][0], f[v][1]);\n        f[u][1] += f[v][0];\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    g.assign(n + 1, {});\n    f.assign(n + 1, {0, 0});\n    happy.assign(n + 1, 0);\n    hasParent.assign(n + 1, 0);\n    for (int i = 1; i <= n; i++) cin >> happy[i];\n    for (int i = 0; i < n - 1; i++) {\n        int l, k;\n        cin >> l >> k;\n        g[k].push_back(l);\n        hasParent[l] = 1;\n    }\n    int root = 1;\n    while (root <= n && hasParent[root]) root++;\n    dfs(root);\n    cout << max(f[root][0], f[root][1]) << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
         }
       ]
     },
@@ -3551,6 +4063,262 @@ window.XMUOJ_SITE_DATA = {
           "language": "C++",
           "lineCount": 112,
           "source": "/*\n * LinK61: 最省赛程\n */\n\n#include <iostream>\n#include <cstring>\n#include <queue>\n#include <vector>\nusing namespace std;\n\nconst int N = 1010, M = 20010, C = 110;\nint h[N], e[M], w[M], ne[M], idx;\nint price[N];  // 每个城市的油价\nint dist[N][C];  // dist[i][j] 到达城市i剩余油量j的最小花费\nbool st[N][C];\nint n, m, q;\n\nstruct State {\n    int city, fuel, cost;\n    bool operator>(const State &other) const {\n        return cost > other.cost;\n    }\n};\n\nvoid add(int a, int b, int c) {\n    e[idx] = b;\n    w[idx] = c;\n    ne[idx] = h[a];\n    h[a] = idx++;\n}\n\nint dijkstra(int cap, int start, int end) {\n    memset(dist, 0x3f, sizeof(dist));\n    memset(st, 0, sizeof(st));\n    \n    priority_queue<State, vector<State>, greater<State>> heap;\n    \n    // 起点：油箱为空，花费0\n    dist[start][0] = 0;\n    heap.push({start, 0, 0});\n    \n    while (!heap.empty()) {\n        State t = heap.top();\n        heap.pop();\n        \n        int city = t.city, fuel = t.fuel, cost = t.cost;\n        \n        if (city == end) return cost;  // 到达终点\n        \n        if (st[city][fuel]) continue;\n        st[city][fuel] = true;\n        \n        // 操作1：在当前城市加1单位油（如果没满）\n        if (fuel < cap) {\n            int nf = fuel + 1;\n            int nc = cost + price[city];\n            if (nc < dist[city][nf]) {\n                dist[city][nf] = nc;\n                heap.push({city, nf, nc});\n            }\n        }\n        \n        // 操作2：开车到相邻城市\n        for (int i = h[city]; i != -1; i = ne[i]) {\n            int next = e[i];\n            int need = w[i];\n            \n            if (fuel >= need) {\n                int nf = fuel - need;\n                if (cost < dist[next][nf]) {\n                    dist[next][nf] = cost;\n                    heap.push({next, nf, cost});\n                }\n            }\n        }\n    }\n    \n    return -1;  // 无法到达\n}\n\nint main() {\n    cin >> n >> m;\n    \n    for (int i = 0; i < n; i++) {\n        cin >> price[i];\n    }\n    \n    memset(h, -1, sizeof(h));\n    \n    while (m--) {\n        int a, b, c;\n        cin >> a >> b >> c;\n        add(a, b, c);\n        add(b, a, c);  // 无向图\n    }\n    \n    cin >> q;\n    \n    while (q--) {\n        int C, S, E;\n        cin >> C >> S >> E;\n        \n        int ans = dijkstra(C, S, E);\n        if (ans == -1) {\n            cout << \"impossible\" << endl;\n        } else {\n            cout << ans << endl;\n        }\n    }\n    \n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK62",
+          "code": "LinK62",
+          "file": "LinK62.cpp",
+          "title": "数字三角形",
+          "language": "C++",
+          "lineCount": 22,
+          "source": "/*\n * LinK62: 数字三角形\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<vector<int>> f(n + 1, vector<int>(n + 1, -1e9));\n    f[0][0] = 0;\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= i; j++) {\n            int x;\n            cin >> x;\n            f[i][j] = max(f[i - 1][j - 1], f[i - 1][j]) + x;\n        }\n    }\n    cout << *max_element(f[n].begin(), f[n].end()) << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK63",
+          "code": "LinK63",
+          "file": "LinK63.cpp",
+          "title": "林克的01背包",
+          "language": "C++",
+          "lineCount": 19,
+          "source": "/*\n * LinK63: 林克的01背包\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w;\n        cin >> v >> w;\n        for (int j = V; j >= v; j--) f[j] = max(f[j], f[j - v] + w);\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK64",
+          "code": "LinK64",
+          "file": "LinK64.cpp",
+          "title": "林克的完全背包",
+          "language": "C++",
+          "lineCount": 19,
+          "source": "/*\n * LinK64: 林克的完全背包\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w;\n        cin >> v >> w;\n        for (int j = v; j <= V; j++) f[j] = max(f[j], f[j - v] + w);\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK65",
+          "code": "LinK65",
+          "file": "LinK65.cpp",
+          "title": "多重背包问题(1)",
+          "language": "C++",
+          "lineCount": 21,
+          "source": "/*\n * LinK65: 多重背包问题(1)\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w, s;\n        cin >> v >> w >> s;\n        for (int k = 0; k < s; k++)\n            for (int j = V; j >= v; j--)\n                f[j] = max(f[j], f[j - v] + w);\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK66",
+          "code": "LinK66",
+          "file": "LinK66.cpp",
+          "title": "多重背包问题(2)",
+          "language": "C++",
+          "lineCount": 24,
+          "source": "/*\n * LinK66: 多重背包问题(2)\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w, s;\n        cin >> v >> w >> s;\n        for (int k = 1; s > 0; k <<= 1) {\n            int cnt = min(k, s);\n            s -= cnt;\n            int vv = v * cnt, ww = w * cnt;\n            for (int j = V; j >= vv; j--) f[j] = max(f[j], f[j - vv] + ww);\n        }\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK67",
+          "code": "LinK67",
+          "file": "LinK67.cpp",
+          "title": "分组背包问题",
+          "language": "C++",
+          "lineCount": 25,
+          "source": "/*\n * LinK67: 分组背包问题\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int s;\n        cin >> s;\n        vector<pair<int, int>> items(s);\n        for (auto &it : items) cin >> it.first >> it.second;\n        for (int j = V; j >= 0; j--) {\n            for (auto [v, w] : items) {\n                if (j >= v) f[j] = max(f[j], f[j - v] + w);\n            }\n        }\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK68",
+          "code": "LinK68",
+          "file": "LinK68.cpp",
+          "title": "混合背包问题",
+          "language": "C++",
+          "lineCount": 29,
+          "source": "/*\n * LinK68: 混合背包问题\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, V;\n    cin >> n >> V;\n    vector<int> f(V + 1);\n    for (int i = 0; i < n; i++) {\n        int v, w, s;\n        cin >> v >> w >> s;\n        if (s == 0) {\n            for (int j = v; j <= V; j++) f[j] = max(f[j], f[j - v] + w);\n        } else {\n            if (s == -1) s = 1;\n            for (int k = 1; s > 0; k <<= 1) {\n                int cnt = min(k, s);\n                s -= cnt;\n                int vv = v * cnt, ww = w * cnt;\n                for (int j = V; j >= vv; j--) f[j] = max(f[j], f[j - vv] + ww);\n            }\n        }\n    }\n    cout << f[V] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK69",
+          "code": "LinK69",
+          "file": "LinK69.cpp",
+          "title": "摘花生",
+          "language": "C++",
+          "lineCount": 24,
+          "source": "/*\n * LinK69: 摘花生\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int r, c;\n        cin >> r >> c;\n        vector<vector<int>> f(r + 1, vector<int>(c + 1));\n        for (int i = 1; i <= r; i++)\n            for (int j = 1; j <= c; j++) {\n                int x;\n                cin >> x;\n                f[i][j] = max(f[i - 1][j], f[i][j - 1]) + x;\n            }\n        cout << f[r][c] << '\\n';\n    }\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK70",
+          "code": "LinK70",
+          "file": "LinK70.cpp",
+          "title": "最低通行费",
+          "language": "C++",
+          "lineCount": 22,
+          "source": "/*\n * LinK70: 最低通行费\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    const int INF = 1e9;\n    vector<vector<int>> f(n + 1, vector<int>(n + 1, INF));\n    f[1][0] = f[0][1] = 0;\n    for (int i = 1; i <= n; i++)\n        for (int j = 1; j <= n; j++) {\n            int x;\n            cin >> x;\n            f[i][j] = min(f[i - 1][j], f[i][j - 1]) + x;\n        }\n    cout << f[n][n] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK71",
+          "code": "LinK71",
+          "file": "LinK71.cpp",
+          "title": "最长上升子序列",
+          "language": "C++",
+          "lineCount": 21,
+          "source": "/*\n * LinK71: 最长上升子序列\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> a(n), f(n, 1);\n    for (int &x : a) cin >> x;\n    int ans = 0;\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < i; j++)\n            if (a[j] < a[i]) f[i] = max(f[i], f[j] + 1);\n        ans = max(ans, f[i]);\n    }\n    cout << ans << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK72",
+          "code": "LinK72",
+          "file": "LinK72.cpp",
+          "title": "最长上升子序列(2)",
+          "language": "C++",
+          "lineCount": 21,
+          "source": "/*\n * LinK72: 最长上升子序列(2)\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> q;\n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        auto it = lower_bound(q.begin(), q.end(), x);\n        if (it == q.end()) q.push_back(x);\n        else *it = x;\n    }\n    cout << q.size() << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK73",
+          "code": "LinK73",
+          "file": "LinK73.cpp",
+          "title": "拦截导弹",
+          "language": "C++",
+          "lineCount": 28,
+          "source": "/*\n * LinK73: 拦截导弹\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    vector<int> a;\n    int x;\n    while (cin >> x) a.push_back(x);\n    int n = a.size();\n    vector<int> f(n, 1);\n    int first = 0;\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < i; j++)\n            if (a[j] >= a[i]) f[i] = max(f[i], f[j] + 1);\n        first = max(first, f[i]);\n    }\n    vector<int> q;\n    for (int h : a) {\n        auto it = lower_bound(q.begin(), q.end(), h);\n        if (it == q.end()) q.push_back(h);\n        else *it = h;\n    }\n    cout << first << '\\n' << q.size() << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK75",
+          "code": "LinK75",
+          "file": "LinK75.cpp",
+          "title": "最长公共子序列",
+          "language": "C++",
+          "lineCount": 20,
+          "source": "/*\n * LinK75: 最长公共子序列\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    string a, b;\n    cin >> n >> m >> a >> b;\n    vector<vector<int>> f(n + 1, vector<int>(m + 1));\n    for (int i = 1; i <= n; i++)\n        for (int j = 1; j <= m; j++) {\n            f[i][j] = max(f[i - 1][j], f[i][j - 1]);\n            if (a[i - 1] == b[j - 1]) f[i][j] = max(f[i][j], f[i - 1][j - 1] + 1);\n        }\n    cout << f[n][m] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK76",
+          "code": "LinK76",
+          "file": "LinK76.cpp",
+          "title": "石子合并",
+          "language": "C++",
+          "lineCount": 23,
+          "source": "/*\n * LinK76: 石子合并\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> s(n + 1);\n    for (int i = 1; i <= n; i++) cin >> s[i], s[i] += s[i - 1];\n    vector<vector<int>> f(n + 2, vector<int>(n + 2));\n    for (int len = 2; len <= n; len++)\n        for (int l = 1; l + len - 1 <= n; l++) {\n            int r = l + len - 1;\n            f[l][r] = 1e9;\n            for (int k = l; k < r; k++)\n                f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);\n        }\n    cout << f[1][n] << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK78",
+          "code": "LinK78",
+          "file": "LinK78.cpp",
+          "title": "加分二叉树",
+          "language": "C++",
+          "lineCount": 48,
+          "source": "/*\n * LinK78: 加分二叉树\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nlong long f[35][35];\nint root_[35][35], w[35];\n\nvoid print_pre(int l, int r, bool &first) {\n    if (l > r) return;\n    int rt = root_[l][r];\n    if (!first) cout << ' ';\n    first = false;\n    cout << rt;\n    print_pre(l, rt - 1, first);\n    print_pre(rt + 1, r, first);\n}\n\nint main() {\n    int n;\n    cin >> n;\n    for (int i = 1; i <= n; i++) cin >> w[i];\n    for (int i = 1; i <= n; i++) {\n        f[i][i] = w[i];\n        root_[i][i] = i;\n    }\n    for (int len = 2; len <= n; len++) {\n        for (int l = 1; l + len - 1 <= n; l++) {\n            int r = l + len - 1;\n            for (int k = l; k <= r; k++) {\n                long long left = k == l ? 1 : f[l][k - 1];\n                long long right = k == r ? 1 : f[k + 1][r];\n                long long val = left * right + w[k];\n                if (val > f[l][r]) {\n                    f[l][r] = val;\n                    root_[l][r] = k;\n                }\n            }\n        }\n    }\n    cout << f[1][n] << '\\n';\n    bool first = true;\n    print_pre(1, n, first);\n    cout << '\\n';\n    return 0;\n}\n",
+          "meta": {
+            "timeLimit": "",
+            "memoryLimit": "",
+            "input": "",
+            "output": "",
+            "samples": ""
+          }
+        },
+        {
+          "id": "examples-LinK80",
+          "code": "LinK80",
+          "file": "LinK80.cpp",
+          "title": "没有上司的舞会",
+          "language": "C++",
+          "lineCount": 40,
+          "source": "/*\n * LinK80: 没有上司的舞会\n */\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nvector<vector<int>> g;\nvector<array<int, 2>> f;\nvector<int> happy, hasParent;\n\nvoid dfs(int u) {\n    f[u][1] = happy[u];\n    for (int v : g[u]) {\n        dfs(v);\n        f[u][0] += max(f[v][0], f[v][1]);\n        f[u][1] += f[v][0];\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    g.assign(n + 1, {});\n    f.assign(n + 1, {0, 0});\n    happy.assign(n + 1, 0);\n    hasParent.assign(n + 1, 0);\n    for (int i = 1; i <= n; i++) cin >> happy[i];\n    for (int i = 0; i < n - 1; i++) {\n        int l, k;\n        cin >> l >> k;\n        g[k].push_back(l);\n        hasParent[l] = 1;\n    }\n    int root = 1;\n    while (hasParent[root]) root++;\n    dfs(root);\n    cout << max(f[root][0], f[root][1]) << '\\n';\n    return 0;\n}\n",
           "meta": {
             "timeLimit": "",
             "memoryLimit": "",
